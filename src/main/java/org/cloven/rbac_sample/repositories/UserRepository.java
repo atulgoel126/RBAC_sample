@@ -1,6 +1,6 @@
 package org.cloven.rbac_sample.repositories;
 
-import org.cloven.rbac_sample.entities.User;
+import org.cloven.rbac_sample.models.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

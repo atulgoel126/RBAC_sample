@@ -1,6 +1,6 @@
 package org.cloven.rbac_sample.services;
 
-import org.cloven.rbac_sample.entities.User;
+import org.cloven.rbac_sample.models.User;
 import org.cloven.rbac_sample.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 

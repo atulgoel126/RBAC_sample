@@ -2,7 +2,7 @@ package org.cloven.rbac_sample.controllers;
 
 import org.cloven.rbac_sample.dtos.LoginUserDto;
 import org.cloven.rbac_sample.dtos.RegisterUserDto;
-import org.cloven.rbac_sample.entities.User;
+import org.cloven.rbac_sample.models.User;
 import org.cloven.rbac_sample.responses.LoginResponse;
 import org.cloven.rbac_sample.services.AuthenticationService;
 import org.cloven.rbac_sample.services.JwtService;

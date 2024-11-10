@@ -1,4 +1,4 @@
-package org.cloven.rbac_sample.entities;
+package org.cloven.rbac_sample.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;

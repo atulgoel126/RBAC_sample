@@ -51,18 +51,17 @@ This project demonstrates a comprehensive Role-Based Access Control (RBAC) imple
 src/
 ├── main/
 │   ├── java/
-│   │   └── com/example/rbac/
-│   │       ├── config/          # Configuration classes
-│   │       ├── controller/      # REST controllers
-│   │       ├── dto/            # Data Transfer Objects
-│   │       ├── exception/      # Custom exceptions
-│   │       ├── model/          # Entity classes
-│   │       ├── repository/     # JPA repositories
-│   │       ├── security/       # Security implementations
-│   │       ├── service/        # Business logic
-│   │       └── util/           # Utility classes
+│   │   └── com/cloven/rbac_sample/
+│   │       ├── configs/        # Configuration classes
+│   │       ├── controllers/    # REST controllers
+│   │       ├── dtos/           # Data Transfer Objects
+│   │       ├── exceptions/     # Custom exceptions
+│   │       ├── models/         # Entity classes
+│   │       ├── repositories/   # JPA repositories
+│   │       ├── responses/      # Models for responses
+│   │       └──services/        # Business logic
 │   └── resources/
-│       ├── application.yml     # Application configuration
+│       ├── application.properties     # Application configuration
 │       └── data.sql           # Initial data setup
 ```
 
@@ -77,7 +76,7 @@ src/
 The project uses H2 in-memory database by default. To use a different database:
 
 1. Add the appropriate database dependency to `pom.xml`
-2. Update `application.yml` with your database configuration:
+2. Update `application.properties` with your database configuration:
 
 ```yaml
 spring:
@@ -94,12 +93,12 @@ spring:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/atulgoel126/spring-boot-rbac.git
+git clone https://github.com/atulgoel126/RBAC_sample.git
 ```
 
 2. Navigate to the project directory:
 ```bash
-cd spring-boot-rbac
+cd RBAC_sample
 ```
 
 3. Build the project:
@@ -112,7 +111,7 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-The application will start on `http://localhost:8080`
+The application will start on `http://localhost:8005`
 
 ## Security Implementation Details
 

@@ -1,6 +1,6 @@
 package org.cloven.rbac_sample.controllers;
 
-import org.cloven.rbac_sample.entities.User;
+import org.cloven.rbac_sample.models.User;
 import org.cloven.rbac_sample.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

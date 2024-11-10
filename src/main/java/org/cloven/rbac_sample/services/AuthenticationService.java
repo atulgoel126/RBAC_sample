@@ -2,7 +2,7 @@ package org.cloven.rbac_sample.services;
 
 import org.cloven.rbac_sample.dtos.LoginUserDto;
 import org.cloven.rbac_sample.dtos.RegisterUserDto;
-import org.cloven.rbac_sample.entities.User;
+import org.cloven.rbac_sample.models.User;
 import org.cloven.rbac_sample.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
