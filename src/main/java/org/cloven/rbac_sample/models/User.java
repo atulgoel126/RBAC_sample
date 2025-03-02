@@ -10,30 +10,34 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-@Table(name = "users")
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
-@Accessors(chain = true)  // This enables method chaining for all setters
+@Accessors(chain = true)
 public class User implements UserDetails {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Integer id;
-
+    
     @Column(nullable = false)
     private String fullName;
-
-    @Column(unique = true, length = 100, nullable = false)
+    
+    @Column(nullable = false, unique = true)
     private String email;
-
+    
     @Column(nullable = false)
     private String password;
-
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+    
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
     private Date createdAt;
@@ -41,11 +45,20 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.getName().toString());
-        return List.of(authority);
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        
+        // Add role as an authority
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName().name()));
+        
+        // Add all permissions as authorities
+        authorities.addAll(role.getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+                .collect(Collectors.toSet()));
+        
+        return authorities;
     }
 
     @Override
@@ -72,15 +85,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    @ManyToOne(
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY
-    )
-    @JoinColumn(
-            name = "role_id",
-            referencedColumnName = "id",
-            nullable = false
-    )
-    private Role role;
 }

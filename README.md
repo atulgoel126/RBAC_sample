@@ -51,18 +51,22 @@ This project demonstrates a comprehensive Role-Based Access Control (RBAC) imple
 src/
 ├── main/
 │   ├── java/
-│   │   └── com/cloven/rbac_sample/
-│   │       ├── configs/        # Configuration classes
-│   │       ├── controllers/    # REST controllers
-│   │       ├── dtos/           # Data Transfer Objects
-│   │       ├── exceptions/     # Custom exceptions
-│   │       ├── models/         # Entity classes
-│   │       ├── repositories/   # JPA repositories
-│   │       ├── responses/      # Models for responses
-│   │       └──services/        # Business logic
+│   │   └── org/cloven/rbac_sample/
+│   │       ├── bootstrap/     # Data initialization
+│   │       ├── configs/       # Configuration classes
+│   │       ├── controllers/   # REST controllers
+│   │       ├── dtos/          # Data Transfer Objects
+│   │       ├── exceptions/    # Custom exceptions
+│   │       ├── models/        # Entity classes
+│   │       ├── repositories/  # JPA repositories
+│   │       ├── responses/     # Models for responses
+│   │       ├── security/      # Security configuration
+│   │       └── services/      # Business logic
 │   └── resources/
-│       ├── application.properties     # Application configuration
-│       └── data.sql           # Initial data setup
+│       ├── application.properties        # Common configuration
+│       ├── application-dev.properties    # Development configuration
+│       ├── application-test.properties   # Test configuration
+│       └── application-prod.properties   # Production configuration
 ```
 
 ## Setup and Installation
@@ -73,20 +77,28 @@ src/
 - Your favorite IDE (IntelliJ IDEA recommended)
 
 ### Database Configuration
-The project uses H2 in-memory database by default. To use a different database:
+The project uses H2 file-based database by default in development mode. This ensures data persistence between application restarts.
 
-1. Add the appropriate database dependency to `pom.xml`
-2. Update `application.properties` with your database configuration:
+To use a different database:
 
-```yaml
-spring:
-  datasource:
-    url: jdbc:your_database_url
-    username: your_username
-    password: your_password
-  jpa:
-    hibernate:
-      ddl-auto: update
+1. Add the appropriate database dependency to `pom.xml` (PostgreSQL is already included)
+2. Update the appropriate `application-{env}.properties` file or use environment variables
+
+### Environment Configuration
+The application supports multiple environments:
+
+- **Development**: Uses H2 file-based database (default)
+- **Test**: Uses H2 in-memory database
+- **Production**: Configured for PostgreSQL
+
+To set the active profile:
+```
+export SPRING_PROFILES_ACTIVE=dev
+```
+
+Or in application.properties:
+```
+spring.profiles.active=dev
 ```
 
 ### Running the Application
@@ -113,6 +125,11 @@ mvn spring-boot:run
 
 The application will start on `http://localhost:8005`
 
+### Default Credentials
+The application is bootstrapped with a default admin user:
+- Email: admin@example.com
+- Password: admin123
+
 ## Security Implementation Details
 
 ### Role Hierarchy
@@ -124,32 +141,24 @@ ROLE_ADMIN
 
 ### Default Roles and Permissions
 - **ADMIN**: Full system access
-- **MODERATOR**: User management, content management
-- **USER**: Basic application access
-
-### Authentication Flow
-1. User provides credentials
-2. System validates credentials
-3. JWT token is generated
-4. Token is used for subsequent requests
-5. Access is granted based on user roles and permissions
+- **MODERATOR**: Read and list access to all resources
+- **USER**: Read and list access to user resources only
 
 ## API Documentation
 
 ### Authentication Endpoints
 ```
-POST /api/auth/signup - Register new user
 POST /api/auth/signin - Authenticate user
-POST /api/auth/refresh - Refresh token
-POST /api/auth/logout - Logout user
+POST /api/auth/signup - Register new user
+POST /api/auth/signout - Logout user
 ```
 
 ### User Management Endpoints
 ```
-GET    /api/users - Get all users (ADMIN)
+GET    /api/users - Get all users (ADMIN, MODERATOR)
 POST   /api/users - Create user (ADMIN)
-GET    /api/users/{id} - Get user by ID (ADMIN, MODERATOR)
-PUT    /api/users/{id} - Update user (ADMIN)
+GET    /api/users/{id} - Get user by ID (ADMIN, MODERATOR, Self)
+PUT    /api/users/{id} - Update user (ADMIN, Self)
 DELETE /api/users/{id} - Delete user (ADMIN)
 ```
 
@@ -157,46 +166,61 @@ DELETE /api/users/{id} - Delete user (ADMIN)
 ```
 GET    /api/roles - Get all roles (ADMIN)
 POST   /api/roles - Create role (ADMIN)
+GET    /api/roles/{id} - Get role by ID (ADMIN)
 PUT    /api/roles/{id} - Update role (ADMIN)
 DELETE /api/roles/{id} - Delete role (ADMIN)
+POST   /api/roles/{roleId}/permissions/{permissionId} - Assign permission to role (ADMIN)
+DELETE /api/roles/{roleId}/permissions/{permissionId} - Revoke permission from role (ADMIN)
 ```
 
-## Testing
+### Permission Management Endpoints
+```
+GET    /api/permissions - Get all permissions (ADMIN)
+POST   /api/permissions - Create permission (ADMIN)
+GET    /api/permissions/{id} - Get permission by ID (ADMIN)
+DELETE /api/permissions/{id} - Delete permission (ADMIN)
+```
 
-### Unit Tests
+### Resource Management Endpoints
+```
+GET    /api/resources - Get all resources (ADMIN)
+POST   /api/resources - Create resource (ADMIN)
+GET    /api/resources/{id} - Get resource by ID (ADMIN)
+PUT    /api/resources/{id} - Update resource (ADMIN)
+DELETE /api/resources/{id} - Delete resource (ADMIN)
+```
+
+### Action Management Endpoints
+```
+GET    /api/actions - Get all actions (ADMIN)
+POST   /api/actions - Create action (ADMIN)
+GET    /api/actions/{id} - Get action by ID (ADMIN)
+PUT    /api/actions/{id} - Update action (ADMIN)
+DELETE /api/actions/{id} - Delete action (ADMIN)
+```
+
+## Testing the API
+
+You can use tools like Postman or curl to test the API endpoints.
+
+### Authentication Example
+
 ```bash
-mvn test
+# Login
+curl -X POST http://localhost:8005/api/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"admin123"}'
+
+# The response will contain a JWT token to use in subsequent requests
 ```
 
-### Integration Tests
+### Using the JWT Token
+
 ```bash
-mvn verify
+# Get all users
+curl -X GET http://localhost:8005/api/users \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
-
-## Best Practices Implemented
-
-1. **Security**
-    - Password encryption
-    - Token-based authentication
-    - Role-based authorization
-    - Input validation
-    - XSS protection
-    - CSRF protection
-
-2. **Code Quality**
-    - Clean code principles
-    - SOLID principles
-    - Design patterns
-    - Code documentation
-    - Unit testing
-    - Integration testing
-
-3. **Performance**
-    - Database indexing
-    - Connection pooling
-    - Caching strategies
-    - Lazy loading
-    - Pagination
 
 ## Contributing
 1. Fork the repository
@@ -210,8 +234,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 For support, please create an issue in the GitHub repository or contact the maintainers.
-
-## Acknowledgments
-- Spring Boot team for the excellent framework
-- Spring Security team for the robust security framework
-- The open-source community for valuable feedback and contributions

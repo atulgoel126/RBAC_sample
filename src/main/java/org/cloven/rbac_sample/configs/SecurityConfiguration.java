@@ -1,10 +1,10 @@
 package org.cloven.rbac_sample.configs;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+// import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+// import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,8 +15,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@Configuration
-@EnableWebSecurity
+/**
+ * This class is now deprecated as security configuration has been moved to WebSecurityConfig.
+ * It is kept for reference but all its beans are disabled.
+ * 
+ * @deprecated Use {@link org.cloven.rbac_sample.configs.WebSecurityConfig} instead.
+ */
+// @Configuration
+// @EnableWebSecurity
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -29,7 +35,10 @@ public class SecurityConfiguration {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    @Bean
+    /**
+     * @deprecated Use security filter chain in WebSecurityConfig instead.
+     */
+    // @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -46,7 +55,10 @@ public class SecurityConfiguration {
                 .build();
     }
 
-    @Bean
+    /**
+     * @deprecated Use CORS configuration in WebSecurityConfig instead.
+     */
+    // @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 

@@ -8,13 +8,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "roles")
 @Entity
 @Getter
 @Setter
- @Accessors(chain = true)
-
+@Accessors(chain = true)
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,4 +36,25 @@ public class Role {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
+    
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private Set<User> users = new HashSet<>();
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "role_permissions",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private Set<Permission> permissions = new HashSet<>();
+    
+    public void addPermission(Permission permission) {
+        this.permissions.add(permission);
+        permission.getRoles().add(this);
+    }
+    
+    public void removePermission(Permission permission) {
+        this.permissions.remove(permission);
+        permission.getRoles().remove(this);
+    }
 }
