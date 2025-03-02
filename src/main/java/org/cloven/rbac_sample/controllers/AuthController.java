@@ -15,13 +15,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthController {
     
     private final AuthenticationManager authenticationManager;
@@ -39,6 +47,14 @@ public class AuthController {
     }
     
     @PostMapping("/signin")
+    @Operation(summary = "Sign in a user", description = "Authenticates a user and returns a JWT token")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully authenticated",
+                content = @Content(mediaType = "application/json", 
+                schema = @Schema(implementation = JwtResponse.class))),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Bad credentials", 
+                content = @Content(mediaType = "application/json"))
+    })
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -57,12 +73,21 @@ public class AuthController {
     }
     
     @PostMapping("/signup")
+    @Operation(summary = "Register a new user", description = "Creates a new user account with specified roles")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully registered"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Email already in use or invalid role")
+    })
     public ResponseEntity<User> registerUser(@Valid @RequestBody RegisterUserDto registerUserDto) {
         User user = userService.createUser(registerUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
     
     @PostMapping("/signout")
+    @Operation(summary = "Sign out a user", description = "Logs out the current user session")
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully logged out")
+    })
     public ResponseEntity<ApiResponse> logoutUser() {
         // In a stateless JWT implementation, the client simply discards the token
         // For added security, you could implement a token blacklist here

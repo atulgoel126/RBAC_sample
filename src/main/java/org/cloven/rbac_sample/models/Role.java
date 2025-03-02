@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -37,7 +38,8 @@ public class Role {
     @Column(name = "updated_at")
     private Date updatedAt;
     
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "role")
     private Set<User> users = new HashSet<>();
     
     @ManyToMany(fetch = FetchType.EAGER)

@@ -3,6 +3,7 @@ package org.cloven.rbac_sample.controllers;
 import jakarta.validation.Valid;
 import org.cloven.rbac_sample.dtos.RegisterUserDto;
 import org.cloven.rbac_sample.dtos.UpdateUserDto;
+import org.cloven.rbac_sample.dtos.UserResponseDto;
 import org.cloven.rbac_sample.models.User;
 import org.cloven.rbac_sample.responses.ApiResponse;
 import org.cloven.rbac_sample.services.UserService;
@@ -12,10 +13,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "Users", description = "User management APIs")
 public class UserController {
     
     private final UserService userService;
@@ -26,17 +36,39 @@ public class UserController {
     }
     
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
-    public ResponseEntity<List<User>> getAllUsers() {
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Get all users", 
+        description = "Retrieves a list of all users in the system",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved users"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Access denied")
+    })
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        List<UserResponseDto> userDtos = users.stream()
+                .map(UserResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(userDtos);
     }
     
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or @userSecurity.isCurrentUser(#id)")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isCurrentUser(#id)")
+    @Operation(
+        summary = "Get user by ID", 
+        description = "Retrieves a specific user by their ID",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved user"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "User not found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Access denied")
+    })
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Integer id) {
         User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(UserResponseDto.fromEntity(user));
     }
     
     @PostMapping
@@ -55,6 +87,16 @@ public class UserController {
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Delete user", 
+        description = "Deletes a user by their ID",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully deleted user"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "User not found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Access denied")
+    })
     public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.ok(ApiResponse.success("User deleted successfully"));

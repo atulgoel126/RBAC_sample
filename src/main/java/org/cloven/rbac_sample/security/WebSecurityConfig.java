@@ -30,13 +30,23 @@ public class WebSecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Use explicit AntPathRequestMatcher for all paths
+                        // API endpoints
                         .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
+                        
+                        // H2 Console
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+                        
+                        // Swagger UI and API docs
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-resources/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/webjars/**")).permitAll()
+                        
+                        // Test endpoints and errors
                         .requestMatchers(new AntPathRequestMatcher("/api/test/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                        
                         // Secure all other endpoints
                         .anyRequest().authenticated()
                 )
