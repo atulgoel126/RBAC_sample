@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form'; 
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAuth } from '../context/AuthContext';
-import apiClient from '../utils/apiClient'; 
-import { AxiosError } from 'axios'; 
+import apiClient from '../utils/apiClient';
+import { AxiosError } from 'axios';
+import { Button } from '../components/ui/Button'; // Import the reusable Button
 
 // Define the type for our form data
 type LoginFormData = {
@@ -14,30 +15,30 @@ type LoginFormData = {
 // Common Tailwind styles (can be moved to a shared location later)
 const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
 const inputStyle = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100";
-const buttonStyle = "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50";
+// Removed buttonStyle constant as we'll use the Button component
 const errorTextStyle = "mt-1 text-xs text-red-600";
 const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
 
 function LoginPage() {
-  const [apiError, setApiError] = useState<string | null>(null); 
+  const [apiError, setApiError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { login } = useAuth();
-  
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors, isSubmitting } 
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
   } = useForm<LoginFormData>();
 
   const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
-    setApiError(null); 
+    setApiError(null);
     console.log('Attempting login with:', data);
     try {
-      const response = await apiClient.post('/auth/signin', data); 
+      const response = await apiClient.post('/auth/signin', data);
       const responseData = response.data;
       if (responseData && responseData.token) {
-        login(responseData.token); 
-        navigate('/'); 
+        login(responseData.token);
+        navigate('/');
       } else {
         throw new Error('Login successful, but no token received.');
       }
@@ -49,14 +50,14 @@ function LoginPage() {
       } else if (err instanceof Error && !(err instanceof AxiosError)) {
          errorMessage = err.message;
       } // Keep default message for 401 or unknown Axios errors
-      setApiError(errorMessage); 
+      setApiError(errorMessage);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-8"> {/* Center the form */}
       <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4"> 
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label htmlFor="email" className={labelStyle}>Email:</label>
           <input
@@ -68,9 +69,9 @@ function LoginPage() {
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address"
-              } 
+              }
             })}
-            disabled={isSubmitting} 
+            disabled={isSubmitting}
           />
           {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
         </div>
@@ -85,16 +86,21 @@ function LoginPage() {
           />
           {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
         </div>
-        
+
         {apiError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <span className="block sm:inline">{apiError}</span>
           </div>
         )}
 
-        <button type="submit" disabled={isSubmitting} className={buttonStyle}>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full" // Apply full width
+          variant="primary" // Use the primary style variant
+        >
           {isSubmitting ? 'Logging in...' : 'Login'}
-        </button>
+        </Button>
       </form>
       <nav className="mt-4 text-center space-x-4">
         <Link to="/register" className={linkStyle}>Don't have an account? Register</Link>
