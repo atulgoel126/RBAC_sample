@@ -31,7 +31,7 @@ function LoginPage() {
     console.log('Attempting login with:', data);
     try {
       // Corrected endpoint to /auth/login
-      const response = await apiClient.post('/auth/login', data);
+      const response = await apiClient.post('/auth/signin', data);
       const responseData = response.data;
       // Check for both accessToken (named 'token' in current backend response) and refreshToken
       if (responseData && responseData.token && responseData.refreshToken) {

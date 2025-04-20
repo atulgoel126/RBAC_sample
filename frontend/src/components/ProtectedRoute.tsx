@@ -7,7 +7,8 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const { isAuthenticated, isLoading, roles } = useAuth(); // Get roles from context
+  const { isAuthenticated, isLoading, userDetails } = useAuth(); // Get userDetails from context
+  const roles = userDetails.roles; // Extract roles from userDetails
   const location = useLocation(); // Get current location to redirect back after login
 
   // If still checking auth state, don't render anything yet (or show loading)

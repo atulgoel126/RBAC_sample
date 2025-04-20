@@ -21,6 +21,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.util.stream.Collectors;
 
 @RestController
@@ -68,6 +70,25 @@ public class UserController {
     })
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Integer id) {
         User user = userService.getUserById(id);
+        return ResponseEntity.ok(UserResponseDto.fromEntity(user));
+    }
+    
+
+    @GetMapping("/profile/{email}")
+    @PreAuthorize("#email == authentication.principal.username or hasRole('ADMIN')")
+    @Operation(
+        summary = "Get user profile by email", 
+        description = "Retrieves a specific user's profile by their email (username). Requires user to be fetching their own profile or be an ADMIN.",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved user profile"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "User not found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Access denied")
+    })
+    public ResponseEntity<UserResponseDto> getUserProfileByEmail(@PathVariable String email) {
+        // Assuming UserService has a method like getUserByEmail
+        User user = userService.getUserByEmail(email); 
         return ResponseEntity.ok(UserResponseDto.fromEntity(user));
     }
     
