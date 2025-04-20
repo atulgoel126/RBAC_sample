@@ -3,6 +3,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import apiClient from '../../utils/apiClient';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Label } from '../../components/ui/Label';
+import { errorTextStyle, formInputStyle, formLabelStyle, linkStyle } from '../../styles/commonStyles'; // Import common styles
 
 // Define interfaces (can be shared or redefined if needed)
 interface Resource {
@@ -25,6 +29,8 @@ interface Permission {
 interface PermissionEditFormData {
   description: string; // Only description is editable
 }
+
+// Removed local style constants
 
 const EditPermissionPage: React.FC = () => {
   const { permissionId } = useParams<{ permissionId: string }>();
@@ -83,12 +89,6 @@ const EditPermissionPage: React.FC = () => {
     }
   };
 
-  // Tailwind classes (reuse or define as needed)
-  const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
-  const inputStyle = "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm";
-  const disabledInputStyle = `${inputStyle} bg-gray-100 cursor-not-allowed`;
-  const errorTextStyle = "text-red-600 text-sm mt-1";
-  const buttonStyle = `w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${isSubmitting || isLoadingData ? 'opacity-50 cursor-not-allowed' : ''}`;
 
   if (isLoadingData) {
     return <div className="text-center p-4">Loading permission details...</div>;
@@ -102,9 +102,10 @@ const EditPermissionPage: React.FC = () => {
                 <strong className="font-bold">Error: </strong>
                 <span className="block sm:inline">{formError || "Permission not found."}</span>
             </div>
-            <button onClick={() => navigate('/admin/permissions')} className="mt-4 text-indigo-600 hover:text-indigo-800">
+             {/* Use Button with link variant */}
+            <Button onClick={() => navigate('/admin/permissions')} variant="link" className="mt-4">
                 Back to Permissions List
-            </button>
+            </Button>
         </div>
     );
   }
@@ -123,54 +124,62 @@ const EditPermissionPage: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Display Resource and Action as disabled fields */}
         <div>
-          <label htmlFor="resourceName" className={labelStyle}>Resource</label>
-          <input
+           {/* Use Label component */}
+          <Label htmlFor="resourceName" className={formLabelStyle}>Resource</Label>
+           {/* Use Input component */}
+          <Input
             type="text"
             id="resourceName"
             value={permission.resource.name}
-            className={disabledInputStyle}
+            className={`${formInputStyle} bg-gray-100 cursor-not-allowed`} // Apply common style + disabled
             disabled
           />
         </div>
 
         <div>
-          <label htmlFor="actionName" className={labelStyle}>Action</label>
-          <input
+           {/* Use Label component */}
+          <Label htmlFor="actionName" className={formLabelStyle}>Action</Label>
+           {/* Use Input component */}
+          <Input
             type="text"
             id="actionName"
             value={permission.action.name}
-            className={disabledInputStyle}
+            className={`${formInputStyle} bg-gray-100 cursor-not-allowed`} // Apply common style + disabled
             disabled
           />
         </div>
 
         {/* Editable Description */}
         <div>
-          <label htmlFor="description" className={labelStyle}>Description</label>
-          <input
+           {/* Use Label component */}
+          <Label htmlFor="description" className={formLabelStyle}>Description</Label>
+           {/* Use Input component */}
+          <Input
             type="text"
             id="description"
             {...register('description')} // No validation needed for optional field
-            className={`${inputStyle} ${errors.description ? 'border-red-500' : ''}`}
+            className={`${formInputStyle} ${errors.description ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
             disabled={isSubmitting}
             placeholder="Enter optional description"
           />
+           {/* Use common errorTextStyle */}
           {errors.description && <p className={errorTextStyle}>{errors.description.message}</p>}
         </div>
 
-        <div>
-          <button
+        <div className="flex justify-end space-x-3"> {/* Align buttons */}
+           {/* Use Button component for Cancel */}
+           <Button type="button" variant="outline" onClick={() => navigate('/admin/permissions')} disabled={isSubmitting}>
+             Cancel
+           </Button>
+           {/* Use Button component for Submit */}
+          <Button
             type="submit"
-            className={buttonStyle}
             disabled={isSubmitting || isLoadingData}
           >
             {isSubmitting ? 'Updating...' : 'Update Description'}
-          </button>
+          </Button>
         </div>
       </form>
-       <button onClick={() => navigate('/admin/permissions')} className="mt-4 text-indigo-600 hover:text-indigo-800">
-         Cancel
-       </button>
     </div>
   );
 };

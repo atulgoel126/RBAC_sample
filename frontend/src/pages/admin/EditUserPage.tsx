@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form'; 
+import { useForm, SubmitHandler } from 'react-hook-form';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Label } from '../../components/ui/Label';
+import { linkStyle, errorTextStyle, formInputStyle, formLabelStyle } from '../../styles/commonStyles'; // Import common styles
 
 // Interfaces
 interface Role {
@@ -13,31 +17,25 @@ interface Role {
 // Form data type
 type EditUserFormData = {
   fullName: string;
-  email: string; 
+  email: string;
   roleId: string;
 };
 
-// Common Tailwind styles
-const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
-const inputStyle = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100";
-const selectStyle = `${inputStyle} pr-8`; 
-const buttonStyle = "inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50";
-const errorTextStyle = "mt-1 text-xs text-red-600";
-const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
+// Removed local style constants
 
 const EditUserPage: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>(); 
+  const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
 
   const [roles, setRoles] = useState<Role[]>([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const { 
-    register, 
-    handleSubmit, 
-    reset, 
-    formState: { errors, isSubmitting } 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting }
   } = useForm<EditUserFormData>();
 
   useEffect(() => {
@@ -54,15 +52,15 @@ const EditUserPage: React.FC = () => {
             apiClient.get('/roles'),
             apiClient.get(`/users/${userId}`)
         ]);
-       
+
         setRoles(rolesResponse.data || []);
         const fetchedUser = userResponse.data;
-        
+
         if (fetchedUser) {
           reset({
             fullName: fetchedUser.fullName || '',
             email: fetchedUser.email || '',
-            roleId: fetchedUser.role?.id || '', 
+            roleId: fetchedUser.role?.id || '',
           });
         } else {
           throw new Error("User data not found.");
@@ -81,7 +79,7 @@ const EditUserPage: React.FC = () => {
       }
     };
     fetchData();
-  }, [userId, reset]); 
+  }, [userId, reset]);
 
   const onSubmit: SubmitHandler<EditUserFormData> = async (data) => {
     setApiError(null);
@@ -92,12 +90,13 @@ const EditUserPage: React.FC = () => {
     try {
       const payload = {
         fullName: data.fullName,
-        email: data.email, 
+        email: data.email,
         roleId: data.roleId,
       };
-      await apiClient.put(`/users/${userId}`, payload); 
-      alert('User updated successfully!'); 
-      navigate('/admin/users'); 
+      await apiClient.put(`/users/${userId}`, payload);
+      // Use toast notification?
+      alert('User updated successfully!');
+      navigate('/admin/users');
     } catch (err) {
       console.error(`Error updating user ${userId}:`, err);
       let errorMessage = 'Failed to update user.';
@@ -114,70 +113,92 @@ const EditUserPage: React.FC = () => {
     return <p className="text-center mt-8">Loading user data...</p>;
   }
 
-  if (apiError && !isSubmitting) { 
-     return <p className="text-red-600 text-center mt-8">Error loading data: {apiError}</p>;
+  // Show error prominently if loading failed
+  if (apiError && !isSubmitting && roles.length === 0) { // Check if roles also failed to load
+     return (
+        <div className="max-w-lg mx-auto p-6">
+            <h1 className="text-2xl font-bold mb-4">Edit User (ID: {userId})</h1>
+             <div className="mb-4">
+                <Link to="/admin/users" className={linkStyle}>&larr; Back to User List</Link>
+            </div>
+            <p className="text-red-600 text-center mt-8">Error loading data: {apiError}</p>
+        </div>
+     );
   }
+
 
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit User (ID: {userId})</h1>
        <div className="mb-4">
+         {/* Use common linkStyle */}
          <Link to="/admin/users" className={linkStyle}>&larr; Back to User List</Link>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 bg-white p-6 rounded shadow-md">
         <div>
-          <label htmlFor="fullName" className={labelStyle}>Full Name:</label>
-          <input
+          {/* Use Label component */}
+          <Label htmlFor="fullName" className={formLabelStyle}>Full Name:</Label>
+          {/* Use Input component */}
+          <Input
             type="text"
             id="fullName"
-            className={inputStyle}
+            className={`${errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
             {...register("fullName", { required: "Full Name is required" })}
             disabled={isSubmitting}
           />
+           {/* Use common errorTextStyle */}
           {errors.fullName && <p className={errorTextStyle}>{errors.fullName.message}</p>}
         </div>
         <div>
-          <label htmlFor="email" className={labelStyle}>Email:</label>
-          <input
+           {/* Use Label component */}
+          <Label htmlFor="email" className={formLabelStyle}>Email:</Label>
+           {/* Use Input component */}
+          <Input
             type="email"
             id="email"
-            className={inputStyle}
-             {...register("email", { 
-              required: "Email is required", 
+            className={`${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+             {...register("email", {
+              required: "Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address"
-              } 
+              }
             })}
             disabled={isSubmitting} // Consider if email should be editable
           />
+           {/* Use common errorTextStyle */}
            {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
         </div>
         {/* Password field omitted */}
         <div>
-          <label htmlFor="roleId" className={labelStyle}>Role:</label>
+           {/* Use Label component */}
+          <Label htmlFor="roleId" className={formLabelStyle}>Role:</Label>
+           {/* Keep select, but apply common input style */}
           <select
             id="roleId"
-            className={selectStyle}
+            className={`${formInputStyle} pr-8 ${errors.roleId ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Apply common style + padding + error style
             {...register("roleId", { required: "Role is required" })}
-            disabled={isSubmitting || roles.length === 0 || loading} // Disable while loading roles too
+            disabled={isSubmitting || loading || roles.length === 0} // Disable while loading roles too
           >
              <option value="" disabled>-- Select Role --</option>
             {roles.map((role) => (
               <option key={role.id} value={role.id}>
-                {role.name} 
+                {role.name}
               </option>
             ))}
           </select>
+           {/* Use common errorTextStyle */}
            {errors.roleId && <p className={errorTextStyle}>{errors.roleId.message}</p>}
         </div>
 
-        {apiError && <p className="text-red-600 text-sm mt-2">{apiError}</p>} 
+        {/* Display API error related to submission */}
+        {apiError && isSubmitting && <p className="text-red-600 text-sm mt-2">{apiError}</p>}
 
-        <button type="submit" disabled={isSubmitting || loading} className={`${buttonStyle} w-full`}>
+         {/* Use Button component */}
+        <Button type="submit" disabled={isSubmitting || loading} className="w-full">
           {isSubmitting ? 'Updating...' : 'Update User'}
-        </button>
+        </Button>
       </form>
     </div>
   );
