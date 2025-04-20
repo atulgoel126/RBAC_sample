@@ -6,29 +6,22 @@ This list outlines potential features, improvements, or areas that might require
 
 ### Core Functionality
 - **Component Development:**
-    - Refine Dashboard page component (e.g., add summaries, better navigation).
-    - Implement Create/Edit functionality for Permissions (if applicable/needed).
-    - Create reusable UI components (buttons, inputs, modals, tables, etc.) to ensure consistency and reduce style duplication.
-    - Implement "View" functionality for Users/Roles/Permissions (dedicated pages or modals).
+    - Create more reusable UI components (modals, tables, select, textarea, checkbox, etc.) to ensure consistency and reduce style duplication.
+    - Refactor remaining pages/components (e.g., RegistrationPage, form pages) to use reusable components.
 - **API Integration:**
-    - Implement API calls for remaining CRUD operations (e.g., Create/Delete Permissions if needed).
-- **Routing:**
-    - Add role-based authorization checks within `ProtectedRoute` or specific components (e.g., only ADMIN can access certain admin pages).
+    - Implement API calls for remaining CRUD operations (e.g., Create/Delete Resources/Actions if needed via UI).
 - **UI Styling:**
     - Refine overall application look and feel (typography, spacing, color scheme).
-    - Implement responsive design for different screen sizes.
-    - Extract common Tailwind styles into reusable constants or a dedicated CSS module/utility function.
+    - Further improve responsive design for different screen sizes (e.g., table layouts on mobile).
 - **Form Handling & Validation:**
-    - Add more specific or complex validation rules as needed (e.g., password confirmation on registration).
-    - Improve user feedback on validation errors (e.g., highlighting fields, better placement of error messages).
+    - Improve user feedback on validation errors (e.g., highlighting fields, better placement of error messages). Consider using a dedicated form library helper for this.
 - **State Management:**
-    - Enhance `AuthContext` to potentially store user details (like name or roles) fetched after login, reducing repeated API calls.
+    - Enhance `AuthContext` to potentially store user details (like name or full profile) fetched after login, reducing repeated API calls.
     - Consider other state management tools (Zustand, Redux Toolkit) if application complexity grows significantly.
-- **Logout:** Improve placement and styling of the logout functionality (currently basic button in Layout).
 
 ### Quality & Testing
 - **Frontend Testing:** Add unit and integration tests (e.g., using Vitest/React Testing Library) for components, context, forms, and API interactions.
-- **Error Handling:** Implement more user-friendly global error handling (e.g., using toast notifications for API errors instead of just `alert` or console logs). Refine error display on forms.
+- **Error Handling:** Refine error display on forms (e.g., showing validation errors next to fields).
 
 ---
 
@@ -50,6 +43,7 @@ This list outlines potential features, improvements, or areas that might require
 - **User Group Management:** Introduce user groups.
 - **Self-Service Password Reset:** Allow users to reset passwords.
 - **Email Verification:** Implement email verification.
+- **Resource/Action Management UI:** Add UI pages for managing Resources and Actions if required.
 
 ## Testing & Quality Assurance (Backend)
 - **Comprehensive Test Coverage:** Increase backend unit and integration test coverage.
@@ -64,7 +58,3 @@ This list outlines potential features, improvements, or areas that might require
 - **Detailed JavaDocs:** Add comprehensive JavaDocs.
 - **Frontend Documentation:** Document frontend components, context, API client, and architecture.
 - **Sequence Diagrams:** Create sequence diagrams for key flows (Auth, CRUD operations).
-- **Role-Specific Dashboards:** Implement different dashboard views based on user role:
-        - **ADMIN:** Current view (Manage Users, Roles, Permissions).
-        - **MODERATOR:** View only the User List (link to `/admin/users`).
-        - **USER:** Display basic user account information (e.g., username, email, role) - requires fetching user details.
