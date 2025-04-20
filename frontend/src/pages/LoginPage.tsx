@@ -6,6 +6,7 @@ import apiClient from '../utils/apiClient';
 import { AxiosError } from 'axios';
 import { Button } from '../components/ui/Button'; // Import the reusable Button
 import { Input } from '../components/ui/Input';   // Import the reusable Input
+import { Label } from '../components/ui/Label';   // Import the reusable Label
 
 // Define the type for our form data
 type LoginFormData = {
@@ -14,8 +15,7 @@ type LoginFormData = {
 };
 
 // Common Tailwind styles (can be moved to a shared location later)
-const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
-// Removed inputStyle constant as we'll use the Input component
+// Removed labelStyle constant as we'll use the Label component
 const errorTextStyle = "mt-1 text-xs text-red-600";
 const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
 
@@ -58,13 +58,13 @@ function LoginPage() {
     <div className="max-w-md mx-auto mt-8"> {/* Center the form */}
       <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="email" className={labelStyle}>Email:</label>
-          {/* Use Input component */}
+        <div className="grid w-full max-w-sm items-center gap-1.5"> {/* Added wrapper for better label spacing */}
+          {/* Use Label component */}
+          <Label htmlFor="email">Email:</Label>
           <Input
             type="email"
             id="email"
-            className={`mt-1 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Add margin and error styling
+            className={`${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Removed margin, handled by wrapper gap
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -73,20 +73,20 @@ function LoginPage() {
               }
             })}
             disabled={isSubmitting}
-            placeholder="you@example.com" // Add placeholder
+            placeholder="you@example.com"
           />
           {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
         </div>
-        <div>
-          <label htmlFor="password" className={labelStyle}>Password:</label>
-          {/* Use Input component */}
+        <div className="grid w-full max-w-sm items-center gap-1.5"> {/* Added wrapper for better label spacing */}
+           {/* Use Label component */}
+          <Label htmlFor="password">Password:</Label>
           <Input
             type="password"
             id="password"
-            className={`mt-1 ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Add margin and error styling
+            className={`${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Removed margin, handled by wrapper gap
             {...register("password", { required: "Password is required" })}
             disabled={isSubmitting}
-            placeholder="Enter your password" // Add placeholder
+            placeholder="Enter your password"
           />
           {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
         </div>
