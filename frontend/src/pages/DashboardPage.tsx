@@ -35,20 +35,19 @@ const DashboardPage: React.FC = () => {
         </>
       )}
 
-      {roles.includes('ROLE_MODERATOR') && !roles.includes('ADMIN') && (
+      {/* Refined Moderator View */}
+      {roles.includes('ROLE_MODERATOR') && !roles.includes('ROLE_ADMIN') && (
         <>
-          <p className="text-gray-600 mb-8">Welcome, Moderator. You can manage users.</p>
-          <h2 className="text-2xl font-semibold text-gray-700 mb-5">Management Sections</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Link to="/admin/users" className={cardLinkStyle}>
-              <span className={linkTextStyle}>Manage Users</span>
-              <p className="text-sm text-gray-500 mt-2">View, create, edit, and delete user accounts.</p>
-            </Link>
-            {/* Add other Moderator-specific links here if needed */}
-          </div>
+          <p className="text-gray-600 mb-6">Welcome, Moderator. You have access to user management.</p>
+          {/* Direct link for Moderator */}
+          <Link to="/admin/users" className={cardLinkStyle}>
+            <span className={linkTextStyle}>Manage Users</span>
+            <p className="text-sm text-gray-500 mt-2">View, create, edit, and delete user accounts.</p>
+          </Link>
         </>
       )}
 
+      {/* Default User View */}
       {!roles.includes('ROLE_ADMIN') && !roles.includes('ROLE_MODERATOR') && (
          <>
            <p className="text-gray-600 mb-8">Welcome to your dashboard.</p>
