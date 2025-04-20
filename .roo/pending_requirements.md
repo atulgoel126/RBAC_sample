@@ -30,7 +30,7 @@ This list outlines potential features, improvements, or areas that might require
 - **Token Blacklisting Verification:** Confirm the implementation details and effectiveness of the token blacklisting mechanism upon signout.
 
 ## Security Enhancements (Backend)
-- **Token Refresh Mechanism:** Implement JWT refresh tokens for better session management. (Backend generation implemented)
+- ~~**Token Refresh Mechanism:** Implement JWT refresh tokens for better session management. (Backend generation implemented)~~ (Backend endpoint and Frontend integration completed)
 - **Two-Factor Authentication (2FA):** Add 2FA.
 - **Password Policies:** Implement stricter password policies.
 - **Account Locking/Throttling:** Implement login attempt limits.

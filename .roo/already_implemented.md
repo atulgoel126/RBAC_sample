@@ -14,6 +14,7 @@
 - CORS configuration (Updated for Vite dev server)
 - CSRF protection (Needs verification - Spring Security default?)
 - **Bug Fix:** Updated `JwtService` to include filtered user roles (prefixed with `ROLE_`) in the JWT "roles" claim upon login.
+ - **Token Refresh Mechanism:** Added `/api/auth/refresh` endpoint and service logic to issue new access tokens using valid refresh tokens.
 
 ## Core Components & Data Models (Backend)
 - User Management (CRUD)
@@ -51,6 +52,7 @@
 ## Frontend (React + TypeScript)
 - **Project Structure**: Basic setup using Vite in `/frontend`.
 - **API Client**: Configured `axios` instance (`apiClient.ts`) with request interceptor for JWT token attachment. **Enhanced** response interceptor for global error handling (toast notifications, improved message extraction).
+     - **Enhanced** response interceptor to automatically handle 401 errors by attempting token refresh and retrying the original request.
 - **Styling**:
     - Tailwind CSS (v3.4.3) installed and configured.
     - Reusable UI components created (`Button`, `Input`, `Label`, `Card` in `/components/ui/`).
@@ -61,6 +63,7 @@
     - Client-side routing implemented using `react-router-dom`.
     - `ProtectedRoute` component implemented and **enhanced** to apply role-based authorization checks (`allowedRoles`) to admin routes in `App.tsx`.
 - **State Management**: `AuthContext` created for global authentication state (token, login/logout, loading state). Decodes JWT and provides `username` and `roles`.
+     - **Enhanced** `AuthContext` to store refresh tokens, handle refresh logic via custom events from `apiClient`, and update `LoginPage` accordingly.
 - **Form Handling**: `react-hook-form` implemented for Login, Register, Create/Edit User, Create/Edit Role, Create/Edit Permission forms. Password confirmation validation added to Registration.
 - **Authentication Flow**:
     - `LoginPage` component with API call and context integration.
