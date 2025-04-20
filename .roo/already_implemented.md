@@ -87,3 +87,19 @@
     - `EditPermissionPage` component (fetches permission, allows description update via PUT API).
     - `ViewPermissionPage` component (displays permission details).
     - Delete functionality implemented on `PermissionListPage`.
+## Frontend Development (React + TypeScript) - Session [Date TBD]
+
+### Core Functionality
+- **Component Development:**
+    - Created reusable UI components: `Button`, `Card`, `Input`, `Label`, `Select`, `Textarea`, `Checkbox`, `Modal`, `Table`, `FormErrorMessage`.
+    - Refactored `RegistrationPage`, `LoginPage`, `Create*`, `Edit*`, and `*List` pages in `/admin` to use reusable components.
+- **API Integration:**
+    - Implemented UI pages for CRUD operations on Resources and Actions (`ResourceListPage`, `CreateResourcePage`, `EditResourcePage`, `ActionListPage`, `CreateActionPage`, `EditActionPage`). Added necessary routes and dashboard links.
+- **Form Handling & Validation:**
+    - Improved validation feedback consistency by encapsulating error styling within `Input`, `Select`, `Textarea` components via an `error` prop.
+    - Created `FormErrorMessage` component for displaying validation messages.
+- **State Management:**
+    - Enhanced `AuthContext` to fetch and store user's `fullName` upon login (assuming `/users/profile/{username}` or `/users/me` endpoint).
+
+### Feature Expansion (Backend related)
+- **Resource/Action Management UI:** Added UI pages for managing Resources and Actions.

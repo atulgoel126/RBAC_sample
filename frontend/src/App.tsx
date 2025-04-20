@@ -23,6 +23,14 @@ import EditRolePage from './pages/admin/EditRolePage';
 import CreatePermissionPage from './pages/admin/CreatePermissionPage'; // Import CreatePermissionPage
 import EditPermissionPage from './pages/admin/EditPermissionPage'; // Import the new page
 
+// Admin Resource Pages
+import ResourceListPage from './pages/admin/ResourceListPage';
+import CreateResourcePage from './pages/admin/CreateResourcePage';
+import EditResourcePage from './pages/admin/EditResourcePage';
+// Admin Action Pages
+import ActionListPage from './pages/admin/ActionListPage';
+import CreateActionPage from './pages/admin/CreateActionPage';
+import EditActionPage from './pages/admin/EditActionPage';
 import PermissionListPage from './pages/admin/PermissionListPage'; // Import PermissionListPage
 import './App.css';
 
@@ -74,6 +82,14 @@ function App() {
           {/* Moved CreatePermissionPage inside ADMIN-only block */}
           <Route path="admin/permissions/create" element={<CreatePermissionPage />} />
           {/* Add other ADMIN-only protected routes here later */}
+          {/* Action Management */}
+          <Route path="admin/actions" element={<ActionListPage />} />
+          <Route path="admin/actions/create" element={<CreateActionPage />} />
+          <Route path="admin/actions/edit/:actionId" element={<EditActionPage />} />
+          {/* Resource Management */}
+          <Route path="admin/resources" element={<ResourceListPage />} />
+          <Route path="admin/resources/create" element={<CreateResourcePage />} />
+          <Route path="admin/resources/edit/:resourceId" element={<EditResourcePage />} />
         </Route>
 
         {/* --- End Protected Routes --- */}

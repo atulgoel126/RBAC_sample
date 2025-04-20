@@ -3,10 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Label } from '../../components/ui/Label';
-import { linkStyle, errorTextStyle, formLabelStyle } from '../../styles/commonStyles'; // Import common styles
+import { Button, Input, Label, Textarea, FormErrorMessage } from '../../components/ui'; // Import FormErrorMessage
+import { linkStyle } from '../../styles/commonStyles'; // Remove errorTextStyle import
 
 // Define the type for our form data
 type CreateRoleFormData = {
@@ -15,7 +13,7 @@ type CreateRoleFormData = {
 };
 
 // Removed local style constants
-const smallTextStyle = "text-xs text-gray-500 mt-1"; // Keep small text style for now
+// const smallTextStyle = "text-xs text-gray-500 mt-1"; // Remove unused style
 
 const CreateRolePage: React.FC = () => {
   const [apiError, setApiError] = useState<string | null>(null);
@@ -63,14 +61,14 @@ const CreateRolePage: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 bg-white p-6 rounded shadow-md">
-        <div>
-          {/* Use Label component */}
-          <Label htmlFor="name" className={formLabelStyle}>Role Name:</Label>
+        <div className="space-y-1"> {/* Add spacing */}
+          {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="name">Role Name:</Label>
           {/* Use Input component */}
           <Input
             type="text"
             id="name"
-            className={`${errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.name} // Pass error prop
             placeholder="e.g., EDITOR"
             {...register("name", {
                 required: "Role name is required",
@@ -83,24 +81,21 @@ const CreateRolePage: React.FC = () => {
             })}
             disabled={isSubmitting}
           />
-           <small className={smallTextStyle}> Use uppercase letters/underscores (e.g., CONTENT_EDITOR).</small>
-           {/* Use common errorTextStyle */}
-           {errors.name && <p className={errorTextStyle}>{errors.name.message}</p>}
+           <small className="text-xs text-gray-500 mt-1"> Use uppercase letters/underscores (e.g., CONTENT_EDITOR).</small> {/* Keep inline style for now */}
+           <FormErrorMessage>{errors.name?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="description" className={formLabelStyle}>Description:</Label>
-           {/* Use Input component for now (replace with Textarea later if created) */}
-          <Input
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="description">Description:</Label>
+           {/* Use Textarea component */}
+          <Textarea
             id="description"
-            // Consider adding rows prop if Input component is enhanced or use Textarea
-            className={`${errors.description ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.description} // Pass error prop
             {...register("description")}
             disabled={isSubmitting}
             placeholder="Optional: Describe the role's purpose"
           />
-           {/* Use common errorTextStyle */}
-           {errors.description && <p className={errorTextStyle}>{errors.description.message}</p>}
+           <FormErrorMessage>{errors.description?.message}</FormErrorMessage> {/* Use component */}
         </div>
 
         {apiError && <p className="text-red-600 text-sm mt-2">{apiError}</p>}

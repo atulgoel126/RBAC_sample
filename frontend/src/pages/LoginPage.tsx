@@ -4,10 +4,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Label } from '../components/ui/Label';
-import { linkStyle, errorTextStyle } from '../styles/commonStyles'; // Corrected import path
+import { Button, Input, Label, FormErrorMessage } from '../components/ui'; // Import FormErrorMessage
+import { linkStyle } from '../styles/commonStyles'; // Remove errorTextStyle import
 
 // Define the type for our form data
 type LoginFormData = {
@@ -61,7 +59,7 @@ function LoginPage() {
           <Input
             type="email"
             id="email"
-            className={`${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Removed margin, handled by wrapper gap
+            error={!!errors.email} // Pass error prop
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -72,21 +70,19 @@ function LoginPage() {
             disabled={isSubmitting}
             placeholder="you@example.com"
           />
-          {/* Use common errorTextStyle */}
-          {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
+          <FormErrorMessage>{errors.email?.message}</FormErrorMessage> {/* Use component */}
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5"> {/* Added wrapper for better label spacing */}
           <Label htmlFor="password">Password:</Label>
           <Input
             type="password"
             id="password"
-            className={`${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Removed margin, handled by wrapper gap
+            error={!!errors.password} // Pass error prop
             {...register("password", { required: "Password is required" })}
             disabled={isSubmitting}
             placeholder="Enter your password"
           />
-           {/* Use common errorTextStyle */}
-          {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
+           <FormErrorMessage>{errors.password?.message}</FormErrorMessage> {/* Use component */}
         </div>
 
         {apiError && (

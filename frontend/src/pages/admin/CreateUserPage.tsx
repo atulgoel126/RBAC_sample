@@ -3,10 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Label } from '../../components/ui/Label';
-import { linkStyle, errorTextStyle, formInputStyle, formLabelStyle } from '../../styles/commonStyles'; // Import common styles
+import { Button, Input, Label, Select, FormErrorMessage } from '../../components/ui'; // Import FormErrorMessage
+import { linkStyle } from '../../styles/commonStyles'; // Remove errorTextStyle import
 
 // Interface for Role data
 interface Role {
@@ -97,28 +95,27 @@ const CreateUserPage: React.FC = () => {
       {rolesError && <p className="text-red-600 mb-4">Error loading roles: {rolesError}</p>}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 bg-white p-6 rounded shadow-md">
-        <div>
-          {/* Use Label component */}
-          <Label htmlFor="fullName" className={formLabelStyle}>Full Name:</Label>
+        <div className="space-y-1"> {/* Add spacing */}
+          {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="fullName">Full Name:</Label>
           {/* Use Input component */}
           <Input
             type="text"
             id="fullName"
-            className={`${errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.fullName} // Pass error prop
             {...register("fullName", { required: "Full Name is required" })}
             disabled={isSubmitting || rolesLoading}
           />
-           {/* Use common errorTextStyle */}
-          {errors.fullName && <p className={errorTextStyle}>{errors.fullName.message}</p>}
+           <FormErrorMessage>{errors.fullName?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="email" className={formLabelStyle}>Email:</Label>
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="email">Email:</Label>
            {/* Use Input component */}
           <Input
             type="email"
             id="email"
-            className={`${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.email} // Pass error prop
              {...register("email", {
               required: "Email is required",
               pattern: {
@@ -128,47 +125,37 @@ const CreateUserPage: React.FC = () => {
             })}
             disabled={isSubmitting || rolesLoading}
           />
-           {/* Use common errorTextStyle */}
-           {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
+           <FormErrorMessage>{errors.email?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="password" className={formLabelStyle}>Password:</Label>
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="password">Password:</Label>
            {/* Use Input component */}
           <Input
             type="password"
             id="password"
-            className={`${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.password} // Pass error prop
             {...register("password", {
               required: "Password is required",
               minLength: { value: 6, message: "Password must be at least 6 characters" }
             })}
             disabled={isSubmitting || rolesLoading}
           />
-           {/* Use common errorTextStyle */}
-           {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
+           <FormErrorMessage>{errors.password?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="roleId" className={formLabelStyle}>Role:</Label>
-           {/* Keep select, but apply common input style */}
-          <select
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="roleId">Role:</Label>
+           {/* Use Select component */}
+          <Select
             id="roleId"
-            className={`${formInputStyle} pr-8 ${errors.roleId ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Apply common style + padding + error style
+            error={!!errors.roleId} // Pass error prop
             {...register("roleId", { required: "Role is required" })}
             disabled={isSubmitting || rolesLoading || rolesError !== null}
-          >
-             <option value="" disabled={!rolesLoading && roles.length > 0}>
-               {rolesLoading ? 'Loading roles...' : (roles.length === 0 ? 'No roles available' : '-- Select Role --')}
-             </option>
-            {roles.map((role) => (
-              <option key={role.id} value={role.id}>
-                {role.name}
-              </option>
-            ))}
-          </select>
-           {/* Use common errorTextStyle */}
-           {errors.roleId && <p className={errorTextStyle}>{errors.roleId.message}</p>}
+            options={roles.map(r => ({ value: r.id, label: r.name }))}
+            placeholder={rolesLoading ? 'Loading roles...' : (roles.length === 0 ? 'No roles available' : '-- Select Role --')}
+          />
+           <FormErrorMessage>{errors.roleId?.message}</FormErrorMessage> {/* Use component */}
         </div>
 
         {apiError && <p className="text-red-600 text-sm mt-2">{apiError}</p>}

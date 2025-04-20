@@ -3,10 +3,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import apiClient from '../../utils/apiClient';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Label } from '../../components/ui/Label';
-import { errorTextStyle, formInputStyle, formLabelStyle, linkStyle } from '../../styles/commonStyles'; // Import common styles
+import { Button, Input, Label, Textarea, FormErrorMessage } from '../../components/ui'; // Import FormErrorMessage
+import { linkStyle } from '../../styles/commonStyles'; // Remove errorTextStyle import
 
 // Define interfaces (can be shared or redefined if needed)
 interface Resource {
@@ -123,47 +121,45 @@ const EditPermissionPage: React.FC = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Display Resource and Action as disabled fields */}
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="resourceName" className={formLabelStyle}>Resource</Label>
-           {/* Use Input component */}
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="resourceName">Resource</Label>
+           {/* Use Input component (remove formInputStyle) */}
           <Input
             type="text"
             id="resourceName"
             value={permission.resource.name}
-            className={`${formInputStyle} bg-gray-100 cursor-not-allowed`} // Apply common style + disabled
+            className="bg-gray-100 cursor-not-allowed" // Keep disabled style
             disabled
           />
         </div>
 
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="actionName" className={formLabelStyle}>Action</Label>
-           {/* Use Input component */}
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="actionName">Action</Label>
+           {/* Use Input component (remove formInputStyle) */}
           <Input
             type="text"
             id="actionName"
             value={permission.action.name}
-            className={`${formInputStyle} bg-gray-100 cursor-not-allowed`} // Apply common style + disabled
+            className="bg-gray-100 cursor-not-allowed" // Keep disabled style
             disabled
           />
         </div>
 
         {/* Editable Description */}
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="description" className={formLabelStyle}>Description</Label>
-           {/* Use Input component */}
-          <Input
-            type="text"
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="description">Description</Label>
+           {/* Use Textarea component */}
+          <Textarea
             id="description"
             {...register('description')} // No validation needed for optional field
-            className={`${formInputStyle} ${errors.description ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.description} // Pass error prop (though unlikely)
             disabled={isSubmitting}
             placeholder="Enter optional description"
           />
-           {/* Use common errorTextStyle */}
-          {errors.description && <p className={errorTextStyle}>{errors.description.message}</p>}
+           <FormErrorMessage>{errors.description?.message}</FormErrorMessage> {/* Use component */}
         </div>
 
         <div className="flex justify-end space-x-3"> {/* Align buttons */}

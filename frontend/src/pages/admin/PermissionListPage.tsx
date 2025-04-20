@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
 import { Button } from '../../components/ui/Button';
-import { linkStyle, thStyle, tdStyle, trStyle } from '../../styles/commonStyles'; // Import common styles
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui'; // Import Table components
+import { linkStyle } from '../../styles/commonStyles'; // Keep needed common styles
 
 // Interface for Permission data
 interface Permission {
@@ -85,25 +86,25 @@ const PermissionListPage: React.FC = () => {
 
       {!loading && (
          // Added overflow-x-auto for horizontal scrolling on small screens
-         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-                <tr>
-                <th scope="col" className={thStyle}>ID</th>
-                <th scope="col" className={thStyle}>Name (Resource:Action)</th>
-                <th scope="col" className={thStyle}>Description</th>
-                <th scope="col" className={thStyle}>Actions</th>
-                </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+         <div className="shadow border rounded-lg overflow-x-auto"> {/* Adjusted wrapper style */}
+            <Table> {/* Use Table component */}
+            <TableHeader> {/* Use TableHeader */}
+                <TableRow> {/* Use TableRow */}
+                <TableHead>ID</TableHead> {/* Use TableHead */}
+                <TableHead>Name (Resource:Action)</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Actions</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody> {/* Use TableBody */}
                 {permissions.length > 0 ? (
                 permissions.map((permission) => (
-                    <tr key={permission.id} className={trStyle}>
-                    <td className={`${tdStyle} font-mono text-xs`}>{permission.id}</td>
-                    <td className={tdStyle}>{permission.name || `${permission.resource?.name}:${permission.action?.name}`}</td>
-                    <td className={tdStyle}>{permission.description || '-'}</td>
+                    <TableRow key={permission.id}> {/* Use TableRow */}
+                    <TableCell className="font-mono text-xs">{permission.id}</TableCell> {/* Use TableCell */}
+                    <TableCell>{permission.name || `${permission.resource?.name}:${permission.action?.name}`}</TableCell>
+                    <TableCell>{permission.description || '-'}</TableCell>
                      {/* Ensure actions don't wrap unnecessarily */}
-                    <td className={`${tdStyle} space-x-2 whitespace-nowrap`}>
+                    <TableCell className="space-x-2 whitespace-nowrap">
                         <Link
                             to={`/admin/permissions/view/${permission.id}`}
                             className={`${linkStyle} mr-2`}
@@ -126,18 +127,18 @@ const PermissionListPage: React.FC = () => {
                         >
                             Delete
                         </Button>
-                    </td>
-                    </tr>
+                    </TableCell>
+                    </TableRow>
                 ))
                 ) : (
-                <tr>
-                    <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+                <TableRow> {/* Use TableRow */}
+                    <TableCell colSpan={4} className="text-center text-gray-500"> {/* Use TableCell */}
                     {!error ? 'No permissions found.' : ''}
-                    </td>
-                </tr>
+                    </TableCell>
+                </TableRow>
                 )}
-            </tbody>
-            </table>
+            </TableBody>
+            </Table>
         </div>
       )}
     </div>

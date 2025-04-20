@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
 import { Button } from '../../components/ui/Button';
-import { linkStyle, thStyle, tdStyle, trStyle } from '../../styles/commonStyles'; // Import common styles
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../../components/ui'; // Import Table components
+import { linkStyle } from '../../styles/commonStyles'; // Keep needed common styles
 
 interface User {
   id: string;
@@ -95,27 +96,27 @@ const UserListPage: React.FC = () => {
 
       {!loading && (
         // Added overflow-x-auto for horizontal scrolling on small screens
-        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-                <tr>
-                <th scope="col" className={thStyle}>ID</th>
-                <th scope="col" className={thStyle}>Full Name</th>
-                <th scope="col" className={thStyle}>Email</th>
-                <th scope="col" className={thStyle}>Role</th>
-                <th scope="col" className={thStyle}>Actions</th>
-                </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+        <div className="shadow border rounded-lg overflow-x-auto"> {/* Adjusted wrapper style */}
+            <Table> {/* Use Table component */}
+            <TableHeader> {/* Use TableHeader */}
+                <TableRow> {/* Use TableRow */}
+                <TableHead>ID</TableHead> {/* Use TableHead */}
+                <TableHead>Full Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Actions</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody> {/* Use TableBody */}
                 {users.length > 0 ? (
                 users.map((user) => (
-                    <tr key={user.id} className={trStyle}>
-                    <td className={`${tdStyle} font-mono text-xs`}>{user.id}</td>
-                    <td className={tdStyle}>{user.fullName}</td>
-                    <td className={tdStyle}>{user.email}</td>
-                    <td className={tdStyle}>{user.role?.name || 'N/A'}</td>
+                    <TableRow key={user.id}> {/* Use TableRow */}
+                    <TableCell className="font-mono text-xs">{user.id}</TableCell> {/* Use TableCell */}
+                    <TableCell>{user.fullName}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.role?.name || 'N/A'}</TableCell>
                     {/* Ensure actions don't wrap unnecessarily */}
-                    <td className={`${tdStyle} space-x-2 whitespace-nowrap`}>
+                    <TableCell className="space-x-2 whitespace-nowrap">
                         <Link
                             to={`/admin/users/view/${user.id}`}
                             className={`${linkStyle} mr-2`}
@@ -129,18 +130,18 @@ const UserListPage: React.FC = () => {
                         <Button onClick={() => handleDelete(user.id, user.fullName)} variant="danger" size="sm">
                             Delete
                         </Button>
-                    </td>
-                    </tr>
+                    </TableCell>
+                    </TableRow>
                 ))
                 ) : (
-                <tr>
-                    <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                <TableRow> {/* Use TableRow */}
+                    <TableCell colSpan={5} className="text-center text-gray-500"> {/* Use TableCell */}
                     {!error ? 'No users found.' : ''}
-                    </td>
-                </tr>
+                    </TableCell>
+                </TableRow>
                 )}
-            </tbody>
-            </table>
+            </TableBody>
+            </Table>
         </div>
       )}
     </div>

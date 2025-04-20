@@ -4,7 +4,9 @@ import { useAuth } from '../context/AuthContext';
 import { Card } from '../components/ui/Card'; // Import the reusable Card
 
 const DashboardPage: React.FC = () => {
-  const { username, roles } = useAuth(); // Get user details from context
+  // Destructure userDetails from useAuth() and then get username, roles, fullName
+  const { userDetails } = useAuth();
+  const { username, roles, fullName } = userDetails;
 
   // Removed cardLinkStyle constant
   const linkTextStyle = "text-lg font-medium text-blue-600";
@@ -17,7 +19,8 @@ const DashboardPage: React.FC = () => {
       {/* Role-Based Content */}
       {roles.includes('ROLE_ADMIN') && (
         <>
-          <p className="text-gray-600 mb-8">Welcome, Administrator. Manage users, roles, and permissions from here.</p>
+          {/* Display full name if available */}
+          <p className="text-gray-600 mb-8">Welcome, {fullName || username || 'Administrator'}. Manage users, roles, resources, actions, and permissions from here.</p>
           <h2 className="text-2xl font-semibold text-gray-700 mb-5">Management Sections</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Use Card component for links */}
@@ -39,6 +42,18 @@ const DashboardPage: React.FC = () => {
                 <p className="text-sm text-gray-500 mt-2">View and manage available application permissions.</p>
               </Card>
             </Link>
+            <Link to="/admin/resources">
+              <Card className={`p-6 text-center ${cardHoverStyle}`}>
+                <span className={linkTextStyle}>Manage Resources</span>
+                <p className="text-sm text-gray-500 mt-2">Define the resources that can be acted upon.</p>
+              </Card>
+            </Link>
+            <Link to="/admin/actions">
+              <Card className={`p-6 text-center ${cardHoverStyle}`}>
+                <span className={linkTextStyle}>Manage Actions</span>
+                <p className="text-sm text-gray-500 mt-2">Define the actions that can be performed on resources.</p>
+              </Card>
+            </Link>
           </div>
         </>
       )}
@@ -46,7 +61,8 @@ const DashboardPage: React.FC = () => {
       {/* Refined Moderator View */}
       {roles.includes('ROLE_MODERATOR') && !roles.includes('ROLE_ADMIN') && (
         <>
-          <p className="text-gray-600 mb-6">Welcome, Moderator. You have access to user management.</p>
+          {/* Display full name if available */}
+          <p className="text-gray-600 mb-6">Welcome, {fullName || username || 'Moderator'}. You have access to user management.</p>
           {/* Use Card component for link */}
           <Link to="/admin/users">
              <Card className={`p-6 text-center ${cardHoverStyle}`}>
@@ -60,13 +76,15 @@ const DashboardPage: React.FC = () => {
       {/* Default User View */}
       {!roles.includes('ROLE_ADMIN') && !roles.includes('ROLE_MODERATOR') && (
          <>
-           <p className="text-gray-600 mb-8">Welcome to your dashboard.</p>
-           {/* Use Card component for user info */}
-           <Card className="p-6"> {/* Add padding directly */}
+            {/* Display full name if available */}
+            <p className="text-gray-600 mb-8">Welcome, {fullName || username || 'User'}.</p>
+            {/* Use Card component for user info */}
+            <Card className="p-6"> {/* Add padding directly */}
              <h2 className="text-2xl font-semibold text-gray-700 mb-4">Your Information</h2>
-             <p className="text-gray-700 mb-2"><strong>Username:</strong> {username || 'N/A'}</p>
+             <p className="text-gray-700 mb-2"><strong>Full Name:</strong> {fullName || '(Not Available)'}</p>
+             <p className="text-gray-700 mb-2"><strong>Username/Email:</strong> {username || 'N/A'}</p>
              <p className="text-gray-700"><strong>Roles:</strong> {roles.length > 0 ? roles.join(', ') : 'No roles assigned'}</p>
-             {/* Add more user-specific info here if available/needed */}
+             {/* Permissions are usually not displayed directly */}
            </Card>
          </>
        )}

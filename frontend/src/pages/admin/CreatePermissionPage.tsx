@@ -3,10 +3,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import apiClient from '../../utils/apiClient';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Label } from '../../components/ui/Label';
-import { errorTextStyle, formInputStyle, formLabelStyle } from '../../styles/commonStyles'; // Import common styles
+import { Button, Input, Label, Select, FormErrorMessage } from '../../components/ui'; // Import FormErrorMessage
+// Removed errorTextStyle import
 
 // Define interfaces for Resource and Action based on expected API response
 interface Resource {
@@ -98,60 +96,51 @@ const CreatePermissionPage: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          {/* Use Label component */}
-          <Label htmlFor="resourceId" className={formLabelStyle}>Resource</Label>
-           {/* Keep select, apply common style */}
-          <select
+        <div className="space-y-1"> {/* Add spacing */}
+          {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="resourceId">Resource</Label>
+           {/* Use Select component */}
+          <Select
             id="resourceId"
             {...register('resourceId', { required: 'Resource is required' })}
-            className={`${formInputStyle} pr-8 ${errors.resourceId ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.resourceId} // Pass error prop
             disabled={isSubmitting || isLoadingData || resources.length === 0}
-          >
-            <option value="">-- Select Resource --</option>
-            {resources.map(resource => (
-              <option key={resource.id} value={resource.id}>{resource.name}</option>
-            ))}
-          </select>
-           {/* Use common errorTextStyle */}
-          {errors.resourceId && <p className={errorTextStyle}>{errors.resourceId.message}</p>}
-           {resources.length === 0 && !isLoadingData && <p className={errorTextStyle}>No resources available. Please create resources first.</p>}
+            options={resources.map(r => ({ value: r.id, label: r.name }))}
+            placeholder="-- Select Resource --"
+          />
+           <FormErrorMessage>{errors.resourceId?.message}</FormErrorMessage> {/* Use component */}
+            {resources.length === 0 && !isLoadingData && <FormErrorMessage>No resources available. Please create resources first.</FormErrorMessage>} {/* Use component */}
         </div>
 
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="actionId" className={formLabelStyle}>Action</Label>
-           {/* Keep select, apply common style */}
-          <select
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="actionId">Action</Label>
+           {/* Use Select component */}
+          <Select
             id="actionId"
             {...register('actionId', { required: 'Action is required' })}
-            className={`${formInputStyle} pr-8 ${errors.actionId ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.actionId} // Pass error prop
             disabled={isSubmitting || isLoadingData || actions.length === 0}
-          >
-            <option value="">-- Select Action --</option>
-            {actions.map(action => (
-              <option key={action.id} value={action.id}>{action.name}</option>
-            ))}
-          </select>
-           {/* Use common errorTextStyle */}
-          {errors.actionId && <p className={errorTextStyle}>{errors.actionId.message}</p>}
-           {actions.length === 0 && !isLoadingData && <p className={errorTextStyle}>No actions available. Please create actions first.</p>}
+            options={actions.map(a => ({ value: a.id, label: a.name }))}
+            placeholder="-- Select Action --"
+          />
+           <FormErrorMessage>{errors.actionId?.message}</FormErrorMessage> {/* Use component */}
+            {actions.length === 0 && !isLoadingData && <FormErrorMessage>No actions available. Please create actions first.</FormErrorMessage>} {/* Use component */}
         </div>
 
-        <div>
-           {/* Use Label component */}
-          <Label htmlFor="description" className={formLabelStyle}>Description (Optional)</Label>
+        <div className="space-y-1"> {/* Add spacing */}
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="description">Description (Optional)</Label>
            {/* Use Input component */}
           <Input
             type="text"
             id="description"
             {...register('description')}
-            className={`${errors.description ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+            error={!!errors.description} // Pass error prop
             disabled={isSubmitting || isLoadingData}
             placeholder="Optional: Describe what this permission allows"
           />
-           {/* Use common errorTextStyle */}
-          {errors.description && <p className={errorTextStyle}>{errors.description.message}</p>}
+           <FormErrorMessage>{errors.description?.message}</FormErrorMessage> {/* Use component */}
         </div>
 
         <div>

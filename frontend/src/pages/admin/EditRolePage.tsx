@@ -3,10 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Label } from '../../components/ui/Label';
-import { linkStyle, errorTextStyle, formInputStyle, formLabelStyle } from '../../styles/commonStyles'; // Import common styles
+import { Button, Input, Label, Textarea, Checkbox, FormErrorMessage } from '../../components/ui'; // Import FormErrorMessage
+import { linkStyle } from '../../styles/commonStyles'; // Remove errorTextStyle import
 
 // Interfaces
 interface Permission {
@@ -173,26 +171,24 @@ const EditRolePage: React.FC = () => {
       <form onSubmit={handleSubmit(onDescriptionSubmit)} className="space-y-4 bg-white p-6 rounded shadow-md border border-gray-200 mb-6">
         <h2 className="text-xl font-semibold mb-3">Role Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-           {/* Use Label component */}
-          <Label htmlFor="roleNameDisplay" className={`${formLabelStyle} md:col-span-1`}>Role Name:</Label>
-           {/* Use Input component (read-only) */}
-          <Input type="text" id="roleNameDisplay" value={roleName} readOnly className={`${formInputStyle} md:col-span-2 bg-gray-100`} />
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="roleNameDisplay" className="md:col-span-1">Role Name:</Label>
+           {/* Use Input component (read-only, remove formInputStyle) */}
+          <Input type="text" id="roleNameDisplay" value={roleName} readOnly className="md:col-span-2 bg-gray-100" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-           {/* Use Label component */}
-          <Label htmlFor="description" className={`${formLabelStyle} md:col-span-1 pt-2`}>Description:</Label>
+           {/* Use Label component (remove formLabelStyle) */}
+          <Label htmlFor="description" className="md:col-span-1 pt-2">Description:</Label>
           <div className="md:col-span-2">
-             {/* Use Input component for now */}
-            <Input
+             {/* Use Textarea component */}
+            <Textarea
               id="description"
-              // rows={3} // Input doesn't have rows, use Textarea component when available
-              className={`${formInputStyle} ${formErrors.description ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+              error={!!formErrors.description} // Pass error prop
               {...register("description")}
               disabled={isDescriptionSubmitting}
               placeholder="Optional: Describe the role's purpose"
             />
-             {/* Use common errorTextStyle */}
-            {formErrors.description && <p className={errorTextStyle}>{formErrors.description.message}</p>}
+             <FormErrorMessage>{formErrors.description?.message}</FormErrorMessage> {/* Use component */}
           </div>
         </div>
         {/* Show API error from description submission */}
@@ -217,19 +213,17 @@ const EditRolePage: React.FC = () => {
                     <h3 className="text-lg font-medium mb-2 border-b pb-1">{resourceName}</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                         {permissions.sort((a,b) => (a.action?.name ?? a.name).localeCompare(b.action?.name ?? b.name)).map((permission) => (
-                            <div key={permission.id} className="flex items-center">
-                                <input // Keep custom checkbox for now
+                            <div key={permission.id} className="flex items-center space-x-2"> {/* Add spacing */}
+                                <Checkbox // Use Checkbox component
                                     id={`perm-${permission.id}`}
-                                    type="checkbox"
-                                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded mr-2 disabled:opacity-50"
                                     checked={assignedPermissionIds.has(permission.id)}
-                                    onChange={(e) => handlePermissionChange(permission.id, e.target.checked)}
+                                    onCheckedChange={(checked) => handlePermissionChange(permission.id, !!checked)} // Adapt handler
                                     disabled={permissionToggleLoading[permission.id]}
                                 />
-                                <label htmlFor={`perm-${permission.id}`} className={`text-sm ${permissionToggleLoading[permission.id] ? 'text-gray-400' : 'text-gray-700'}`}>
+                                <Label htmlFor={`perm-${permission.id}`} className={`text-sm font-normal ${permissionToggleLoading[permission.id] ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 cursor-pointer'}`}> {/* Adjust label style */}
                                     {permission.action?.name || permission.name}
                                     {permissionToggleLoading[permission.id] && <em className="ml-2 text-xs">(...)</em>}
-                                </label>
+                                </Label>
                             </div>
                         ))}
                     </div>

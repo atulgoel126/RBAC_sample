@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form'; 
+import { useForm, SubmitHandler } from 'react-hook-form';
 import apiClient from '../utils/apiClient';
 import { AxiosError } from 'axios';
+import { Input, Label, Button, FormErrorMessage } from '../components/ui'; // Import FormErrorMessage
 
 // Define the type for our form data
 type RegistrationFormData = {
@@ -12,11 +13,11 @@ type RegistrationFormData = {
   confirmPassword: string; // Add confirm password field
 };
 
-// Common Tailwind styles (copied from LoginPage for consistency)
-const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
-const inputStyle = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100";
-const buttonStyle = "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50";
-const errorTextStyle = "mt-1 text-xs text-red-600";
+// Remove unused style constants
+// const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
+// const inputStyle = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100";
+// const buttonStyle = "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50";
+// const errorTextStyle = "mt-1 text-xs text-red-600"; // Remove unused style
 const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
 const successTextStyle = "mt-2 text-sm text-green-600 text-center";
 
@@ -63,63 +64,63 @@ function RegistrationPage() {
     <div className="max-w-md mx-auto mt-8"> {/* Center the form */}
       <h1 className="text-2xl font-bold text-center mb-6">Register New User</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="fullName" className={labelStyle}>Full Name:</label>
-          <input
+        <div className="space-y-1"> {/* Add spacing for label/input */}
+          <Label htmlFor="fullName">Full Name:</Label>
+          <Input
             type="text"
             id="fullName"
-            className={`${inputStyle} ${errors.fullName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`} // Highlight on error
+            error={!!errors.fullName} // Pass error prop
             {...register("fullName", { required: "Full Name is required" })}
             disabled={isSubmitting}
           />
-          {errors.fullName && <p className={errorTextStyle}>{errors.fullName.message}</p>}
+          <FormErrorMessage>{errors.fullName?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-          <label htmlFor="email" className={labelStyle}>Email:</label>
-          <input
+        <div className="space-y-1"> {/* Add spacing */}
+          <Label htmlFor="email">Email:</Label>
+          <Input
             type="email"
             id="email"
-            className={`${inputStyle} ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`} // Highlight on error
+            error={!!errors.email} // Pass error prop
             {...register("email", {
               required: "Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address"
-              } 
+              }
             })}
             disabled={isSubmitting}
           />
-          {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
+          <FormErrorMessage>{errors.email?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-          <label htmlFor="password" className={labelStyle}>Password:</label>
-          <input
+        <div className="space-y-1"> {/* Add spacing */}
+          <Label htmlFor="password">Password:</Label>
+          <Input
             type="password"
             id="password"
-            className={`${inputStyle} ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`} // Highlight on error
+            error={!!errors.password} // Pass error prop
             {...register("password", {
               required: "Password is required",
-              minLength: { value: 6, message: "Password must be at least 6 characters" } 
+              minLength: { value: 6, message: "Password must be at least 6 characters" }
             })}
             disabled={isSubmitting}
           />
-          {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
+          <FormErrorMessage>{errors.password?.message}</FormErrorMessage> {/* Use component */}
         </div>
-        <div>
-          <label htmlFor="confirmPassword" className={labelStyle}>Confirm Password:</label>
-          <input
+        <div className="space-y-1"> {/* Add spacing */}
+          <Label htmlFor="confirmPassword">Confirm Password:</Label>
+          <Input
             type="password"
             id="confirmPassword"
-            className={`${inputStyle} ${errors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`} // Highlight on error
+            error={!!errors.confirmPassword} // Pass error prop
             {...register("confirmPassword", {
               required: "Please confirm your password",
               validate: value =>
                 value === passwordValue || "Passwords do not match"
-            })}
-            disabled={isSubmitting}
-          />
-          {errors.confirmPassword && <p className={errorTextStyle}>{errors.confirmPassword.message}</p>}
-        </div>
+           })}
+           disabled={isSubmitting}
+         />
+         <FormErrorMessage>{errors.confirmPassword?.message}</FormErrorMessage> {/* Use component */}
+       </div>
 
         {apiError && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
@@ -128,9 +129,9 @@ function RegistrationPage() {
         )}
         {successMessage && <p className={successTextStyle}>{successMessage}</p>}
 
-        <button type="submit" disabled={isSubmitting} className={buttonStyle}>
+        <Button type="submit" disabled={isSubmitting} className="w-full"> {/* Use Button component */}
           {isSubmitting ? 'Registering...' : 'Register'}
-        </button>
+        </Button>
       </form>
       <nav className="mt-4 text-center space-x-4">
         <Link to="/login" className={linkStyle}>Already have an account? Login</Link>

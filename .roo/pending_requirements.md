@@ -5,18 +5,18 @@ This list outlines potential features, improvements, or areas that might require
 ## Frontend Development (React + TypeScript)
 
 ### Core Functionality
-- **Component Development:**
-    - Create more reusable UI components (modals, tables, select, textarea, checkbox, etc.) to ensure consistency and reduce style duplication.
-    - Refactor remaining pages/components (e.g., RegistrationPage, form pages) to use reusable components.
+- **Component Development:** (Completed - See already_implemented.md)
+    - ~~Create more reusable UI components (modals, tables, select, textarea, checkbox, etc.) to ensure consistency and reduce style duplication.~~
+    - ~~Refactor remaining pages/components (e.g., RegistrationPage, form pages) to use reusable components.~~
 - **API Integration:**
-    - Implement API calls for remaining CRUD operations (e.g., Create/Delete Resources/Actions if needed via UI).
+    - ~~Implement API calls for remaining CRUD operations (e.g., Create/Delete Resources/Actions if needed via UI).~~ (UI Implemented - See already_implemented.md)
 - **UI Styling:**
     - Refine overall application look and feel (typography, spacing, color scheme).
     - Further improve responsive design for different screen sizes (e.g., table layouts on mobile).
 - **Form Handling & Validation:**
-    - Improve user feedback on validation errors (e.g., highlighting fields, better placement of error messages). Consider using a dedicated form library helper for this.
+    - ~~Improve user feedback on validation errors (e.g., highlighting fields, better placement of error messages).~~ (Partially addressed - See already_implemented.md). Consider using a dedicated form library helper for this.
 - **State Management:**
-    - Enhance `AuthContext` to potentially store user details (like name or full profile) fetched after login, reducing repeated API calls.
+    - ~~Enhance `AuthContext` to potentially store user details (like name or full profile) fetched after login, reducing repeated API calls.~~ (Completed - See already_implemented.md)
     - Consider other state management tools (Zustand, Redux Toolkit) if application complexity grows significantly.
 
 ### Quality & Testing
@@ -43,7 +43,7 @@ This list outlines potential features, improvements, or areas that might require
 - **User Group Management:** Introduce user groups.
 - **Self-Service Password Reset:** Allow users to reset passwords.
 - **Email Verification:** Implement email verification.
-- **Resource/Action Management UI:** Add UI pages for managing Resources and Actions if required.
+- **Resource/Action Management UI:** ~~Add UI pages for managing Resources and Actions if required.~~ (Completed - See already_implemented.md)
 
 ## Testing & Quality Assurance (Backend)
 - **Comprehensive Test Coverage:** Increase backend unit and integration test coverage.
