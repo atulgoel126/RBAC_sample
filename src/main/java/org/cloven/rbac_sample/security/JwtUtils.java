@@ -26,6 +26,9 @@ public class JwtUtils {
     @Value("${app.jwt.expiration-ms}")
     private int jwtExpirationMs;
 
+    @Value("${app.jwt.refresh-expiration-ms}") // Added for refresh token
+    private long jwtRefreshExpirationMs; // Use long for potentially larger values
+
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
@@ -77,4 +80,21 @@ public class JwtUtils {
 
         return false;
     }
-} 
+
+    // --- Refresh Token Generation ---
+
+    public String generateRefreshToken(Authentication authentication) {
+        String username = authentication.getName();
+        return Jwts.builder()
+                .setSubject(username)
+                // No need for roles or other claims in refresh token usually
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtRefreshExpirationMs)) // Use refresh expiration
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    // Consider adding validation specific to refresh tokens if needed,
+    // although often validation happens by checking against a persistent store.
+
+}

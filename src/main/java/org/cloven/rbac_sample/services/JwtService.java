@@ -30,6 +30,9 @@ public class JwtService {
     @Value("${app.jwt.expiration-ms}")
     private long jwtExpiration;
 
+    @Value("${app.jwt.refresh-expiration-ms}") // Added for refresh token
+    private long jwtRefreshExpiration; // Added field
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -71,6 +74,18 @@ public class JwtService {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    // --- Refresh Token Generation ---
+    public String generateRefreshToken(UserDetails userDetails) {
+        // Refresh tokens usually only need the subject (username)
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpiration)) // Use refresh expiration
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256) // Consider HS512 if matching JwtUtils
+                .compact();
+    }
+    // --- End Refresh Token Generation ---
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);

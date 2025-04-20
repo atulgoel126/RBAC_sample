@@ -12,4 +12,5 @@ public class LoginResponse {
 
     private long expiresIn;
 
+    private String refreshToken; // Added field for the refresh token
 }
