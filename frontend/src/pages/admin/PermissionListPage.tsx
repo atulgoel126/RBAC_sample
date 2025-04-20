@@ -107,6 +107,14 @@ const PermissionListPage: React.FC = () => {
                     <td className={tdStyle}>{permission.description || '-'}</td>
                     <td className={`${tdStyle} space-x-2`}>
                         {/* Permissions often not editable via UI */}
+                        <Link
+                            to={`/admin/permissions/view/${permission.id}`}
+                            className={`${linkStyle} mr-2`} // Use existing link style, add margin
+                            title="View Permission Details"
+                        >
+                            View
+                        </Link>
+
                         <Link 
                             to={`/admin/permissions/edit/${permission.id}`} 
                             className={linkStyle} // Use existing link style

@@ -114,6 +114,14 @@ const RoleListPage: React.FC = () => {
                     <td className={tdStyle}>{role.name}</td>
                     <td className={tdStyle}>{role.description || '-'}</td>
                     <td className={`${tdStyle} space-x-2`}>
+                        <Link
+                            to={`/admin/roles/view/${role.id}`}
+                            className={`${linkStyle} mr-2`} // Use existing link style, add margin
+                            title="View Role Details"
+                        >
+                            View
+                        </Link>
+
                         <button onClick={() => handleEdit(role.id)} className={editButton}>
                         Edit / Permissions
                         </button>

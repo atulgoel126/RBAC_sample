@@ -9,9 +9,15 @@ import DashboardPage from './pages/DashboardPage'; // Import DashboardPage
 import UserListPage from './pages/admin/UserListPage';
 import CreateUserPage from './pages/admin/CreateUserPage';
 import EditUserPage from './pages/admin/EditUserPage';
+import ViewUserPage from './pages/admin/ViewUserPage'; // Import the new view page
+
 // Admin Role Pages
+import ViewRolePage from './pages/admin/ViewRolePage'; // Import the new view page
+
 import RoleListPage from './pages/admin/RoleListPage';
 import CreateRolePage from './pages/admin/CreateRolePage';
+import ViewPermissionPage from './pages/admin/ViewPermissionPage'; // Import the new view page
+
 import EditRolePage from './pages/admin/EditRolePage';
 // Admin Permission Pages
 import CreatePermissionPage from './pages/admin/CreatePermissionPage'; // Import CreatePermissionPage
@@ -38,12 +44,21 @@ function App() {
         </Route>
 
         {/* Routes accessible by ADMIN and MODERATOR - Use ROLE_ prefix */}
+          {/* Add route for viewing a specific user */}
+          <Route path="admin/users/view/:userId" element={<ViewUserPage />} />
+
         <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN', 'ROLE_MODERATOR']} />}>
           {/* User Management */}
           <Route path="admin/users" element={<UserListPage />} />
           <Route path="admin/users/create" element={<CreateUserPage />} />
           <Route path="admin/users/edit/:userId" element={<EditUserPage />} />
+          {/* Add route for viewing a specific role */}
+          <Route path="admin/roles/view/:roleId" element={<ViewRolePage />} />
+
         </Route>
+          {/* Add route for viewing a specific permission */}
+          <Route path="admin/permissions/view/:permissionId" element={<ViewPermissionPage />} />
+
 
         {/* Routes accessible only by ADMIN - Use ROLE_ prefix */}
         <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>

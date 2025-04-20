@@ -120,6 +120,14 @@ const UserListPage: React.FC = () => {
                     <td className={tdStyle}>{user.email}</td>
                     <td className={tdStyle}>{user.role?.name || 'N/A'}</td>
                     <td className={`${tdStyle} space-x-2`}> {/* Add space between buttons */}
+                        <Link 
+                            to={`/admin/users/view/${user.id}`} 
+                            className={`${linkStyle} mr-2`} // Use existing link style, add margin
+                            title="View User Details"
+                        >
+                            View
+                        </Link>
+
                         <button onClick={() => handleEdit(user.id)} className={editButton}>
                         Edit
                         </button>
