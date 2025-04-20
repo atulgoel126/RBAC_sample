@@ -74,17 +74,16 @@ const RoleListPage: React.FC = () => {
 
   return (
      <div className="container mx-auto px-4 py-6">
-      <div className="flex justify-between items-center mb-4">
+       {/* Header section with responsive flex wrap */}
+      <div className="flex flex-wrap justify-between items-center gap-y-2 mb-4">
         <h1 className="text-2xl font-bold">Role Management</h1>
-        <div>
-            {/* Use Button component inside Link */}
+         <div className="flex items-center space-x-2"> {/* Wrap buttons/links */}
             <Link to="/admin/roles/create">
-                <Button variant="primary" size="sm"> {/* Use standard primary */}
+                <Button variant="primary" size="sm">
                     + Create New Role
                 </Button>
             </Link>
-             {/* Use common linkStyle */}
-             <Link to="/dashboard" className={`${linkStyle} ml-4`}>Back to Dashboard</Link>
+             <Link to="/dashboard" className={linkStyle}>Back to Dashboard</Link> {/* Removed ml-4 */}
         </div>
       </div>
 
@@ -92,11 +91,11 @@ const RoleListPage: React.FC = () => {
       {error && <p className="text-red-600 text-center">Error: {error}</p>}
 
       {!loading && (
-         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+         // Added overflow-x-auto for horizontal scrolling on small screens
+         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 <tr>
-                 {/* Use common thStyle */}
                 <th scope="col" className={thStyle}>ID</th>
                 <th scope="col" className={thStyle}>Name</th>
                 <th scope="col" className={thStyle}>Description</th>
@@ -106,26 +105,22 @@ const RoleListPage: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
                 {roles.length > 0 ? (
                 roles.map((role) => (
-                     /* Use common trStyle */
                     <tr key={role.id} className={trStyle}>
-                     {/* Use common tdStyle */}
                     <td className={`${tdStyle} font-mono text-xs`}>{role.id}</td>
                     <td className={tdStyle}>{role.name}</td>
                     <td className={tdStyle}>{role.description || '-'}</td>
-                    <td className={`${tdStyle} space-x-2`}>
-                         {/* Use common linkStyle */}
+                     {/* Ensure actions don't wrap unnecessarily */}
+                    <td className={`${tdStyle} space-x-2 whitespace-nowrap`}>
                         <Link
                             to={`/admin/roles/view/${role.id}`}
-                            className={`${linkStyle} mr-2`} // Use existing link style, add margin
+                            className={`${linkStyle} mr-2`}
                             title="View Role Details"
                         >
                             View
                         </Link>
-                        {/* Use Button component for Edit */}
                         <Button onClick={() => handleEdit(role.id)} variant="secondary" size="sm">
                             Edit / Permissions
                         </Button>
-                        {/* Use Button component for Delete */}
                         <Button onClick={() => handleDelete(role.id, role.name)} variant="danger" size="sm">
                             Delete
                         </Button>

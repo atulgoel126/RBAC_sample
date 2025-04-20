@@ -67,17 +67,16 @@ const PermissionListPage: React.FC = () => {
 
   return (
      <div className="container mx-auto px-4 py-6">
-      <div className="flex justify-between items-center mb-4">
+       {/* Header section with responsive flex wrap */}
+      <div className="flex flex-wrap justify-between items-center gap-y-2 mb-4">
         <h1 className="text-2xl font-bold">Permission Management</h1>
-        <div>
-            {/* Use Button component inside Link */}
+         <div className="flex items-center space-x-2"> {/* Wrap buttons/links */}
             <Link to="/admin/permissions/create">
                 <Button variant="primary" size="sm">
                     + Create New Permission
                 </Button>
             </Link>
-             {/* Use common linkStyle */}
-             <Link to="/dashboard" className={`${linkStyle} ml-4`}>Back to Dashboard</Link>
+             <Link to="/dashboard" className={linkStyle}>Back to Dashboard</Link> {/* Removed ml-4 */}
         </div>
       </div>
 
@@ -85,11 +84,11 @@ const PermissionListPage: React.FC = () => {
       {error && <p className="text-red-600 text-center">Error: {error}</p>}
 
       {!loading && (
-         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+         // Added overflow-x-auto for horizontal scrolling on small screens
+         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 <tr>
-                 {/* Use common thStyle */}
                 <th scope="col" className={thStyle}>ID</th>
                 <th scope="col" className={thStyle}>Name (Resource:Action)</th>
                 <th scope="col" className={thStyle}>Description</th>
@@ -99,35 +98,31 @@ const PermissionListPage: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
                 {permissions.length > 0 ? (
                 permissions.map((permission) => (
-                     /* Use common trStyle */
                     <tr key={permission.id} className={trStyle}>
-                     {/* Use common tdStyle */}
                     <td className={`${tdStyle} font-mono text-xs`}>{permission.id}</td>
                     <td className={tdStyle}>{permission.name || `${permission.resource?.name}:${permission.action?.name}`}</td>
                     <td className={tdStyle}>{permission.description || '-'}</td>
-                    <td className={`${tdStyle} space-x-2`}>
-                         {/* Use common linkStyle */}
+                     {/* Ensure actions don't wrap unnecessarily */}
+                    <td className={`${tdStyle} space-x-2 whitespace-nowrap`}>
                         <Link
                             to={`/admin/permissions/view/${permission.id}`}
-                            className={`${linkStyle} mr-2`} // Use existing link style, add margin
+                            className={`${linkStyle} mr-2`}
                             title="View Permission Details"
                         >
                             View
                         </Link>
-                         {/* Use common linkStyle */}
                         <Link
                             to={`/admin/permissions/edit/${permission.id}`}
-                            className={linkStyle} // Use existing link style
+                            className={linkStyle}
                             title="Edit Permission Description"
                         >
                             Edit
                         </Link>
-                        {/* Use Button component for Delete */}
                         <Button
                             onClick={() => handleDelete(permission.id, permission.name || `${permission.resource?.name}:${permission.action?.name}`)}
                             variant="danger"
                             size="sm"
-                            title="Delete Permission" // Add title for clarity
+                            title="Delete Permission"
                         >
                             Delete
                         </Button>

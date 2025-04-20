@@ -15,7 +15,8 @@ const Layout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col"> {/* Ensure layout takes full height */}
       <header className="bg-gray-100 border-b border-gray-300 shadow-sm">
-        <nav className="container mx-auto px-4 py-3 flex justify-between items-center">
+        {/* Responsive Navigation */}
+        <nav className="container mx-auto px-4 py-3 flex flex-wrap justify-center md:justify-between items-center gap-y-2"> {/* Added flex-wrap, justify-center, md:justify-between, gap-y-2 */}
           {/* Left side navigation */}
           <div className="space-x-4">
             <Link to="/" className={linkStyle}>Home</Link>
