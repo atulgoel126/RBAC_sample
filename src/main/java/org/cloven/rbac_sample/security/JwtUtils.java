@@ -2,15 +2,19 @@ package org.cloven.rbac_sample.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.cloven.rbac_sample.models.User;
+// import org.cloven.rbac_sample.models.Role; // Removed unused import
+import org.cloven.rbac_sample.models.User; // Keep this for now, might be needed elsewhere or contextually
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority; // Added import
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List; // Added import
+import java.util.stream.Collectors; // Added import
 
 @Component
 public class JwtUtils {
@@ -27,10 +31,18 @@ public class JwtUtils {
     }
 
     public String generateJwtToken(Authentication authentication) {
-        User userPrincipal = (User) authentication.getPrincipal();
+        // Get username from the principal (assuming it's UserDetails or similar)
+        String username = authentication.getName(); // More standard way
+
+        // Extract role names from authorities, filtering for actual roles (prefixed with ROLE_)
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_")) // Keep only role authorities
+                .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(username) // Use username obtained via getName()
+                .claim("roles", roles) // Add ONLY roles to the claim
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)

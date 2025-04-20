@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference; // Add import
 
 import java.util.Date;
 import java.util.HashSet;
@@ -48,6 +49,7 @@ public class Role {
         joinColumns = @JoinColumn(name = "role_id"),
         inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
+    @JsonManagedReference // Add this annotation to break the loop (forward part)
     private Set<Permission> permissions = new HashSet<>();
     
     public void addPermission(Permission permission) {

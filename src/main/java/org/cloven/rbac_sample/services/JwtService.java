@@ -5,18 +5,24 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger; // Added import
+import org.slf4j.LoggerFactory; // Added import
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority; // Added import
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List; // Added import
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors; // Added import
 
 @Service
 public class JwtService {
+    private static final Logger logger = LoggerFactory.getLogger(JwtService.class); // Added logger
 
     @Value("${app.jwt.secret}")
     private String secretKey;
@@ -34,7 +40,22 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        // Log authorities for debugging
+        logger.debug("Generating token for user: {}, Authorities: {}", userDetails.getUsername(), userDetails.getAuthorities());
+
+        // Extract role names (prefixed with ROLE_) from authorities
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .collect(Collectors.toList());
+        
+        logger.debug("Extracted roles for JWT claim: {}", roles);
+
+        // Create extra claims map and add roles
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("roles", roles);
+
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(

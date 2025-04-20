@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonBackReference; // Add import
 
 import java.util.Date;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ public class Permission {
     private Date updatedAt;
     
     @ManyToMany(mappedBy = "permissions")
+    @JsonBackReference // Add this annotation to break the loop (backward part)
     private Set<Role> roles = new HashSet<>();
     
     public String getName() {

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore; // Add import
 
 import java.util.Date;
 import java.util.HashSet;
@@ -37,5 +38,6 @@ public class Action {
     private Date updatedAt;
     
     @OneToMany(mappedBy = "action", cascade = CascadeType.ALL)
+    @JsonIgnore // Add this to prevent serialization of this collection
     private Set<Permission> permissions = new HashSet<>();
-} 
+}

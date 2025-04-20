@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Keep specific app styles below if needed, or move them to components */
+/* For example, we might want to keep some body styling */
+
+body {
+  /* Example: Add some basic padding and background using Tailwind or CSS */
+   /* padding: 1rem; */
+   /* background-color: #f3f4f6; /* Light gray background */
+   /* Or use Tailwind: <body class="bg-gray-100 p-4"> in index.html */
+   margin: 0; /* Keep margin reset */
+   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; /* Keep font */
+   line-height: 1.5; /* Keep line-height */
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default Vite styles that might conflict or are handled by Tailwind base */
+/* 
+:root { ... }
+a { ... }
+h1 { ... }
+button { ... } 
+@media (prefers-color-scheme: light) { ... }
+*/
+
+/* You can add custom component styles here if needed */
