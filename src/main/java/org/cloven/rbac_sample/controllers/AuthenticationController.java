@@ -2,6 +2,8 @@ package org.cloven.rbac_sample.controllers;
 
 import org.cloven.rbac_sample.dtos.LoginUserDto;
 import org.cloven.rbac_sample.dtos.RegisterUserDto;
+import org.cloven.rbac_sample.dtos.RefreshTokenRequest; // Added import
+import org.cloven.rbac_sample.dtos.RefreshTokenResponse; // Added import
 import org.cloven.rbac_sample.models.User;
 import org.cloven.rbac_sample.responses.LoginResponse;
 import org.cloven.rbac_sample.services.AuthenticationService;
@@ -44,5 +46,11 @@ public class AuthenticationController {
                 .setExpiresIn(jwtService.getExpirationTime());
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        RefreshTokenResponse response = authenticationService.refreshToken(request);
+        return ResponseEntity.ok(response);
     }
 }

@@ -30,13 +30,16 @@ function LoginPage() {
     setApiError(null);
     console.log('Attempting login with:', data);
     try {
-      const response = await apiClient.post('/auth/signin', data);
+      // Corrected endpoint to /auth/login
+      const response = await apiClient.post('/auth/login', data);
       const responseData = response.data;
-      if (responseData && responseData.token) {
-        login(responseData.token);
+      // Check for both accessToken (named 'token' in current backend response) and refreshToken
+      if (responseData && responseData.token && responseData.refreshToken) {
+        // Pass both tokens to the login function
+        login({ accessToken: responseData.token, refreshToken: responseData.refreshToken });
         navigate('/');
       } else {
-        throw new Error('Login successful, but no token received.');
+        throw new Error('Login successful, but required tokens were not received.');
       }
     } catch (err) {
       console.error('Login API error:', err);
