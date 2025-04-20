@@ -4,9 +4,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../components/ui/Button'; // Import the reusable Button
-import { Input } from '../components/ui/Input';   // Import the reusable Input
-import { Label } from '../components/ui/Label';   // Import the reusable Label
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { Label } from '../components/ui/Label';
+import { linkStyle, errorTextStyle } from '../styles/commonStyles'; // Corrected import path
 
 // Define the type for our form data
 type LoginFormData = {
@@ -14,10 +15,7 @@ type LoginFormData = {
   password: string;
 };
 
-// Common Tailwind styles (can be moved to a shared location later)
-// Removed labelStyle constant as we'll use the Label component
-const errorTextStyle = "mt-1 text-xs text-red-600";
-const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
+// Removed local style constants
 
 function LoginPage() {
   const [apiError, setApiError] = useState<string | null>(null);
@@ -59,7 +57,6 @@ function LoginPage() {
       <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid w-full max-w-sm items-center gap-1.5"> {/* Added wrapper for better label spacing */}
-          {/* Use Label component */}
           <Label htmlFor="email">Email:</Label>
           <Input
             type="email"
@@ -75,10 +72,10 @@ function LoginPage() {
             disabled={isSubmitting}
             placeholder="you@example.com"
           />
+          {/* Use common errorTextStyle */}
           {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5"> {/* Added wrapper for better label spacing */}
-           {/* Use Label component */}
           <Label htmlFor="password">Password:</Label>
           <Input
             type="password"
@@ -88,6 +85,7 @@ function LoginPage() {
             disabled={isSubmitting}
             placeholder="Enter your password"
           />
+           {/* Use common errorTextStyle */}
           {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
         </div>
 
@@ -107,6 +105,7 @@ function LoginPage() {
         </Button>
       </form>
       <nav className="mt-4 text-center space-x-4">
+         {/* Use common linkStyle */}
         <Link to="/register" className={linkStyle}>Don't have an account? Register</Link>
         <Link to="/" className={linkStyle}>Go to Home</Link>
       </nav>

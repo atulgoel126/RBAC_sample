@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../../components/ui/Button'; // Import the reusable Button
+import { Button } from '../../components/ui/Button';
+import { linkStyle, thStyle, tdStyle, trStyle } from '../../styles/commonStyles'; // Import common styles
 
 interface User {
   id: string;
@@ -13,12 +14,7 @@ interface User {
   };
 }
 
-// Common Tailwind styles (can be moved later)
-const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
-// Removed buttonBase, primaryButton, editButton, deleteButton constants
-const thStyle = "px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider";
-const tdStyle = "px-4 py-2 whitespace-nowrap text-sm text-gray-700";
-const trStyle = "border-b border-gray-200 hover:bg-gray-50";
+// Removed local style constants
 
 const UserListPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -90,6 +86,7 @@ const UserListPage: React.FC = () => {
                     + Create New User
                 </Button>
             </Link>
+             {/* Use common linkStyle */}
              <Link to="/dashboard" className={`${linkStyle} ml-4`}>Back to Dashboard</Link>
         </div>
       </div>
@@ -102,6 +99,7 @@ const UserListPage: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 <tr>
+                 {/* Use common thStyle */}
                 <th scope="col" className={thStyle}>ID</th>
                 <th scope="col" className={thStyle}>Full Name</th>
                 <th scope="col" className={thStyle}>Email</th>
@@ -112,12 +110,15 @@ const UserListPage: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
                 {users.length > 0 ? (
                 users.map((user) => (
+                     /* Use common trStyle */
                     <tr key={user.id} className={trStyle}>
+                     {/* Use common tdStyle */}
                     <td className={`${tdStyle} font-mono text-xs`}>{user.id}</td>
                     <td className={tdStyle}>{user.fullName}</td>
                     <td className={tdStyle}>{user.email}</td>
                     <td className={tdStyle}>{user.role?.name || 'N/A'}</td>
                     <td className={`${tdStyle} space-x-2`}> {/* Add space between buttons */}
+                         {/* Use common linkStyle */}
                         <Link
                             to={`/admin/users/view/${user.id}`}
                             className={`${linkStyle} mr-2`} // Use existing link style, add margin

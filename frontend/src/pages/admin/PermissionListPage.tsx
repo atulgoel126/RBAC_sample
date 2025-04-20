@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../../components/ui/Button'; // Import the reusable Button
+import { Button } from '../../components/ui/Button';
+import { linkStyle, thStyle, tdStyle, trStyle } from '../../styles/commonStyles'; // Import common styles
 
 // Interface for Permission data
 interface Permission {
@@ -13,12 +14,7 @@ interface Permission {
   action?: { name: string };
 }
 
-// Common Tailwind styles
-const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
-// Removed buttonBase, primaryButton, deleteButton constants
-const thStyle = "px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider";
-const tdStyle = "px-4 py-2 whitespace-nowrap text-sm text-gray-700";
-const trStyle = "border-b border-gray-200 hover:bg-gray-50";
+// Removed local style constants
 
 const PermissionListPage: React.FC = () => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -80,6 +76,7 @@ const PermissionListPage: React.FC = () => {
                     + Create New Permission
                 </Button>
             </Link>
+             {/* Use common linkStyle */}
              <Link to="/dashboard" className={`${linkStyle} ml-4`}>Back to Dashboard</Link>
         </div>
       </div>
@@ -92,6 +89,7 @@ const PermissionListPage: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 <tr>
+                 {/* Use common thStyle */}
                 <th scope="col" className={thStyle}>ID</th>
                 <th scope="col" className={thStyle}>Name (Resource:Action)</th>
                 <th scope="col" className={thStyle}>Description</th>
@@ -101,11 +99,14 @@ const PermissionListPage: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
                 {permissions.length > 0 ? (
                 permissions.map((permission) => (
+                     /* Use common trStyle */
                     <tr key={permission.id} className={trStyle}>
+                     {/* Use common tdStyle */}
                     <td className={`${tdStyle} font-mono text-xs`}>{permission.id}</td>
                     <td className={tdStyle}>{permission.name || `${permission.resource?.name}:${permission.action?.name}`}</td>
                     <td className={tdStyle}>{permission.description || '-'}</td>
                     <td className={`${tdStyle} space-x-2`}>
+                         {/* Use common linkStyle */}
                         <Link
                             to={`/admin/permissions/view/${permission.id}`}
                             className={`${linkStyle} mr-2`} // Use existing link style, add margin
@@ -113,6 +114,7 @@ const PermissionListPage: React.FC = () => {
                         >
                             View
                         </Link>
+                         {/* Use common linkStyle */}
                         <Link
                             to={`/admin/permissions/edit/${permission.id}`}
                             className={linkStyle} // Use existing link style

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../../utils/apiClient';
 import { AxiosError } from 'axios';
-import { Button } from '../../components/ui/Button'; // Import the reusable Button
+import { Button } from '../../components/ui/Button';
+import { linkStyle, thStyle, tdStyle, trStyle } from '../../styles/commonStyles'; // Import common styles
 
 // Interface for Role data
 interface Role {
@@ -11,12 +12,7 @@ interface Role {
   description?: string;
 }
 
-// Common Tailwind styles (copied for consistency)
-const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
-// Removed buttonBase, primaryButton, editButton, deleteButton constants
-const thStyle = "px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider";
-const tdStyle = "px-4 py-2 whitespace-nowrap text-sm text-gray-700";
-const trStyle = "border-b border-gray-200 hover:bg-gray-50";
+// Removed local style constants
 
 const RoleListPage: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -87,6 +83,7 @@ const RoleListPage: React.FC = () => {
                     + Create New Role
                 </Button>
             </Link>
+             {/* Use common linkStyle */}
              <Link to="/dashboard" className={`${linkStyle} ml-4`}>Back to Dashboard</Link>
         </div>
       </div>
@@ -99,6 +96,7 @@ const RoleListPage: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 <tr>
+                 {/* Use common thStyle */}
                 <th scope="col" className={thStyle}>ID</th>
                 <th scope="col" className={thStyle}>Name</th>
                 <th scope="col" className={thStyle}>Description</th>
@@ -108,11 +106,14 @@ const RoleListPage: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
                 {roles.length > 0 ? (
                 roles.map((role) => (
+                     /* Use common trStyle */
                     <tr key={role.id} className={trStyle}>
+                     {/* Use common tdStyle */}
                     <td className={`${tdStyle} font-mono text-xs`}>{role.id}</td>
                     <td className={tdStyle}>{role.name}</td>
                     <td className={tdStyle}>{role.description || '-'}</td>
                     <td className={`${tdStyle} space-x-2`}>
+                         {/* Use common linkStyle */}
                         <Link
                             to={`/admin/roles/view/${role.id}`}
                             className={`${linkStyle} mr-2`} // Use existing link style, add margin
