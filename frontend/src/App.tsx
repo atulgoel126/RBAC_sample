@@ -15,6 +15,8 @@ import CreateRolePage from './pages/admin/CreateRolePage';
 import EditRolePage from './pages/admin/EditRolePage';
 // Admin Permission Pages
 import CreatePermissionPage from './pages/admin/CreatePermissionPage'; // Import CreatePermissionPage
+import EditPermissionPage from './pages/admin/EditPermissionPage'; // Import the new page
+
 import PermissionListPage from './pages/admin/PermissionListPage'; // Import PermissionListPage
 import './App.css';
 
@@ -51,6 +53,9 @@ function App() {
           <Route path="admin/roles/edit/:roleId" element={<EditRolePage />} />
           {/* Permission Management */}
           <Route path="admin/permissions" element={<PermissionListPage />} />
+          {/* Add route for editing a specific permission */}
+          <Route path="admin/permissions/edit/:permissionId" element={<EditPermissionPage />} />
+
           {/* Moved CreatePermissionPage inside ADMIN-only block */}
           <Route path="admin/permissions/create" element={<CreatePermissionPage />} />
           {/* Add other ADMIN-only protected routes here later */}

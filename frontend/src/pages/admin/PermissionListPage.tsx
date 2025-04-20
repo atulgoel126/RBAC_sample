@@ -107,6 +107,14 @@ const PermissionListPage: React.FC = () => {
                     <td className={tdStyle}>{permission.description || '-'}</td>
                     <td className={`${tdStyle} space-x-2`}>
                         {/* Permissions often not editable via UI */}
+                        <Link 
+                            to={`/admin/permissions/edit/${permission.id}`} 
+                            className={linkStyle} // Use existing link style
+                            title="Edit Permission Description"
+                        >
+                            Edit
+                        </Link>
+
                         <button 
                             onClick={() => handleDelete(permission.id, permission.name || `${permission.resource?.name}:${permission.action?.name}`)} 
                             className={deleteButton}
