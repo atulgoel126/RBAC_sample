@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import apiClient from '../utils/apiClient';
 import { AxiosError } from 'axios';
 import { Button } from '../components/ui/Button'; // Import the reusable Button
+import { Input } from '../components/ui/Input';   // Import the reusable Input
 
 // Define the type for our form data
 type LoginFormData = {
@@ -14,8 +15,7 @@ type LoginFormData = {
 
 // Common Tailwind styles (can be moved to a shared location later)
 const labelStyle = "block text-sm font-medium text-gray-700 mb-1";
-const inputStyle = "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100";
-// Removed buttonStyle constant as we'll use the Button component
+// Removed inputStyle constant as we'll use the Input component
 const errorTextStyle = "mt-1 text-xs text-red-600";
 const linkStyle = "text-sm text-indigo-600 hover:text-indigo-800 hover:underline";
 
@@ -60,10 +60,11 @@ function LoginPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label htmlFor="email" className={labelStyle}>Email:</label>
-          <input
+          {/* Use Input component */}
+          <Input
             type="email"
             id="email"
-            className={`${inputStyle} ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`} // Highlight on error
+            className={`mt-1 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Add margin and error styling
             {...register("email", {
               required: "Email is required",
               pattern: {
@@ -72,17 +73,20 @@ function LoginPage() {
               }
             })}
             disabled={isSubmitting}
+            placeholder="you@example.com" // Add placeholder
           />
           {errors.email && <p className={errorTextStyle}>{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="password" className={labelStyle}>Password:</label>
-          <input
+          {/* Use Input component */}
+          <Input
             type="password"
             id="password"
-            className={`${inputStyle} ${errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`} // Highlight on error
+            className={`mt-1 ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`} // Add margin and error styling
             {...register("password", { required: "Password is required" })}
             disabled={isSubmitting}
+            placeholder="Enter your password" // Add placeholder
           />
           {errors.password && <p className={errorTextStyle}>{errors.password.message}</p>}
         </div>
