@@ -81,6 +81,27 @@ public class PermissionController {
         Permission permission = permissionService.createPermission(permissionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(permission);
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+        summary = "Update permission description",
+        description = "Updates the description of an existing permission by its ID",
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
+    @ApiResponses(value = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Permission description successfully updated"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input (e.g., empty description)"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Permission not found"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Access denied")
+    })
+    public ResponseEntity<Permission> updatePermissionDescription(
+            @PathVariable Integer id,
+            @Valid @RequestBody String description) { // Directly accept description
+        Permission updatedPermission = permissionService.updatePermissionDescription(id, description);
+        return ResponseEntity.ok(updatedPermission);
+    }
+
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

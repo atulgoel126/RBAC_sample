@@ -72,4 +72,12 @@ public class PermissionService {
         }
         permissionRepository.deleteById(id);
     }
+
+    @Transactional
+    public Permission updatePermissionDescription(Integer id, String description) {
+        Permission permission = getPermissionById(id); // Reuse existing method to find or throw exception
+        permission.setDescription(description);
+        return permissionRepository.save(permission);
+    }
+
 } 
